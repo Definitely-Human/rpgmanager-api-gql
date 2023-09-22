@@ -4,10 +4,12 @@ services:
   api:
     build:
       dockerfile: Dockerfile
+
       context: .
       # Only will build development stage from our dockerfile
       target: development
     volumes:
+      - /usr/src/app/node_modules
       - .:/usr/src/app
     env_file:
       - .env
