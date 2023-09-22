@@ -3,19 +3,22 @@
 # BUILD FOR LOCAL DEVELOPMENT
 ###################
 
-FROM node:20.7.0-alpine3.18 As development
+FROM node:18.18-alpine3.18 As development
 LABEL maintainer=DefinitelyHuman
 
 # Create app directory
 WORKDIR /usr/src/app
 
+RUN npm i -g @nestjs/cli
+
 # Copy application dependency manifests to the container image.
 # A wildcard is used to ensure copying both package.json AND package-lock.json (when available).
 # Copying this first prevents re-running npm install on every code change.
-COPY --chown=node:node package*.json ./
+COPY --chown=node:node package.json ./
+COPY --chown=node:node yarn.lock ./
 
 # Install app dependencies using the `npm ci` command instead of `npm install`
-RUN npm ci
+RUN yarn install --frozen-lockfile
 
 # Bundle app source
 COPY --chown=node:node . .
@@ -27,7 +30,7 @@ USER node
 # BUILD FOR PRODUCTION
 ###################
 
-FROM node:18-alpine As build
+FROM node:18.18-alpine3.18 As build
 
 WORKDIR /usr/src/app
 
@@ -58,7 +61,7 @@ USER node
 # PRODUCTION
 ###################
 
-FROM node:18-alpine As production
+FROM node:18.18-alpine3.18 As production
 
 # Copy the bundled code from the build stage to the production image
 COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
