@@ -4,16 +4,42 @@ services:
   api:
     build:
       dockerfile: Dockerfile
-
       context: .
       # Only will build development stage from our dockerfile
       target: development
     volumes:
       - /usr/src/app/node_modules
       - .:/usr/src/app
-    env_file:
-      - .env
+    environment:
+      - NODE_ENV=dev
     # Run a command against the development stage of the image
     command: yarn run start:dev
     ports:
       - 3000:3000
+    depends_on:
+      - postgres
+    restart: always
+    networks:
+      - sharedNet
+
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: rpg-manager-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - rpg-manager-db:/var/lib/postgresql/data
+    env_file:
+      - .env.dev
+    networks:
+      - sharedNet
+
+networks:
+  sharedNet:
+
+volumes:
+  rpg-manager-db:
