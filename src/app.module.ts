@@ -1,6 +1,8 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
+import { UsersModule } from './users/users.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -9,6 +11,8 @@ import { GraphQLModule } from '@nestjs/graphql';
       autoSchemaFile: true,
       sortSchema: true,
     }),
+    UsersModule,
+    CommonModule,
   ],
   controllers: [],
   providers: [],
