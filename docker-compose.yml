@@ -25,6 +25,7 @@ services:
   postgres:
     image: postgres
     restart: always
+    container_name: postgres_container
     environment:
       POSTGRES_DB: rpg-manager-db
       POSTGRES_USER: postgres
