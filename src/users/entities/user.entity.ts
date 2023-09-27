@@ -1,8 +1,13 @@
+import { InternalServerErrorException } from '@nestjs/common';
 import { InputType, ObjectType } from '@nestjs/graphql';
 import { IsEmail, IsString, Length, IsBoolean, IsDate } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
-import { Column, Entity } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
+/**
+ * Class that describes account specific user fields
+ */
 @InputType('UserInputType', { isAbstract: true })
 @ObjectType()
 @Entity()
@@ -32,4 +37,26 @@ export class User extends CoreEntity {
   @Column({ nullable: true })
   @IsDate()
   lastLoginDate?: boolean;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  async hashPassword(): Promise<void> {
+    if (!this.password) return;
+    try {
+      this.password = await bcrypt.hash(this.password, 10);
+    } catch (e) {
+      console.log(e);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async checkPassword(aPassword: string): Promise<boolean> {
+    try {
+      const ok = await bcrypt.compare(aPassword, this.password);
+      return ok;
+    } catch (e) {
+      console.log(e);
+      throw new InternalServerErrorException();
+    }
+  }
 }

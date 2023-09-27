@@ -7,6 +7,9 @@ export class GetUserInput {
   userId: number;
 }
 
+/**
+ * Return type for getUser resolver.
+ */
 @ObjectType()
 export class GetUserOutput extends CoreOutput {
   user?: User;

@@ -1,5 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
+/**
+ * Type that describes shared fields of all entities.
+ */
 @ObjectType()
 export class CoreOutput {
   @Field((type) => String, { nullable: true })
