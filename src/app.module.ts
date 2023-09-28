@@ -6,6 +6,7 @@ import { CommonModule } from './common/common.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/entities/user.entity';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -39,9 +40,20 @@ import * as Joi from 'joi';
       driver: ApolloDriver,
       autoSchemaFile: true,
       sortSchema: true,
+      subscriptions: {
+        'subscriptions-transport-ws': {
+          onConnect: (connectionParams) => {
+            return { token: connectionParams['x-jwt'] };
+          },
+        },
+      },
+      context: ({ req }) => {
+        return { token: req.headers['x-jwt'] };
+      },
     }),
     UsersModule,
     CommonModule,
+    AuthModule.forRoot({ privateKey: process.env.SECRET_KEY }),
   ],
   controllers: [],
   providers: [],

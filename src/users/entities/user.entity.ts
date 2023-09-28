@@ -16,7 +16,7 @@ export class User extends CoreEntity {
   @IsEmail()
   email: string;
 
-  @Column()
+  @Column({ unique: true })
   @IsString()
   @Length(4, 50)
   username: string;
@@ -33,6 +33,10 @@ export class User extends CoreEntity {
   @Column({ default: false })
   @IsBoolean()
   isStuff: boolean;
+
+  @Column({ default: false })
+  @IsBoolean()
+  isVerified: boolean;
 
   @Column({ nullable: true })
   @IsDate()

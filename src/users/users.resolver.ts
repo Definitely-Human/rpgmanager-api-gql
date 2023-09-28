@@ -7,11 +7,14 @@ import {
   CreateAccountInput,
   CreateAccountOutput,
 } from './dtos/create-account.dto';
+import { AuthUser } from 'src/auth/authUser.decorator';
+import { Authorize } from 'src/auth/authorize.decorator';
 
 @Resolver((of) => User)
 export class UserResolver {
   constructor(private readonly usersService: UsersService) {}
 
+  @Authorize(['Any'])
   @Mutation((returns) => CreateAccountOutput)
   async createAccount(
     @Args('input') createAccountInput: CreateAccountInput,
@@ -22,5 +25,10 @@ export class UserResolver {
   @Query((returns) => User)
   getUser(@Args('input') { userId }: GetUserInput): Promise<GetUserOutput> {
     return this.usersService.getUserById(userId);
+  }
+
+  @Query((returns) => User)
+  me(@AuthUser() authUser: User) {
+    return authUser;
   }
 }

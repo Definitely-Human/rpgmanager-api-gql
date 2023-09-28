@@ -58,6 +58,9 @@ export class UsersService {
 
       await this.users.save(this.users.create({ email, password, username }));
 
+      // TODO: Create profile
+      // TODO: Send verification
+
       return { ok: true };
     } catch (error) {
       console.log(error);
@@ -66,5 +69,19 @@ export class UsersService {
         error: 'Error when creating account.',
       };
     }
+  }
+
+  async findUserByEmailOrName(usernameOrEmail: string) {
+    return await this.users.findOne({
+      where: [
+        {
+          email: usernameOrEmail,
+        },
+        {
+          username: usernameOrEmail,
+        },
+      ],
+      select: ['id', 'password'],
+    });
   }
 }
