@@ -4,6 +4,9 @@ import { BeforeInsert, Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from './user.entity';
 
+/**
+ * User email verification entity.
+ */
 @InputType({ isAbstract: true })
 @ObjectType()
 @Entity()

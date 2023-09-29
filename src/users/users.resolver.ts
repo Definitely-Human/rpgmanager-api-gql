@@ -11,6 +11,7 @@ import { AuthUser } from 'src/auth/authUser.decorator';
 import { Authorize } from 'src/auth/authorize.decorator';
 import { EditUserInput, EditUserOutput } from './dtos/edit-user.dto';
 import { VerifyEmailInput, VerifyEmailOutput } from './dtos/verify-email.dto';
+import { MeOutput } from './dtos/me.dto';
 
 @Resolver((of) => User)
 export class UserResolver {
@@ -24,15 +25,14 @@ export class UserResolver {
     return this.usersService.createAccount(createAccountInput);
   }
 
-  @Authorize(['Admin'])
-  @Query((returns) => User)
+  @Query((returns) => GetUserOutput)
   getUser(@Args('input') { userId }: GetUserInput): Promise<GetUserOutput> {
-    return this.usersService.getUserById(userId);
+    return this.usersService.getPublicUserById(userId);
   }
 
-  @Query((returns) => User)
-  me(@AuthUser() authUser: User) {
-    return authUser;
+  @Query((returns) => MeOutput)
+  me(@AuthUser() authUser: User): Promise<MeOutput> {
+    return this.usersService.me(authUser);
   }
 
   @Mutation((returns) => EditUserOutput)

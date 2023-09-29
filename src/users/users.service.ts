@@ -10,6 +10,7 @@ import {
 import { EditUserInput, EditUserOutput } from './dtos/edit-user.dto';
 import { VerifyEmailOutput } from './dtos/verify-email.dto';
 import { Verification } from './entities/verification.entity';
+import { MeOutput } from './dtos/me.dto';
 
 @Injectable()
 export class UsersService {
@@ -21,7 +22,20 @@ export class UsersService {
   /**
    *  Given id returns user and ok:true if user exists or ok:false error:true otherwise.
    */
-  async getUserById(userId: number): Promise<GetUserOutput> {
+  async getUserById(userId: number): Promise<User> {
+    try {
+      const user = await this.users.findOne({ where: { id: userId } });
+      if (!user) {
+        return null;
+      }
+      return user;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+
+  async getPublicUserById(userId: number): Promise<GetUserOutput> {
     try {
       const user = await this.users.findOne({ where: { id: userId } });
       if (!user) {
@@ -37,6 +51,21 @@ export class UsersService {
     } catch (error) {
       console.log(error);
       return { ok: false, error: 'Error when getting user.' };
+    }
+  }
+
+  async me(user: User): Promise<MeOutput> {
+    try {
+      return {
+        ok: true,
+        user,
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        ok: false,
+        error: 'Error loading user info.',
+      };
     }
   }
 
