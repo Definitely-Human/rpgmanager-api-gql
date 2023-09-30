@@ -2,7 +2,7 @@ import { InputType, ObjectType } from '@nestjs/graphql';
 import { IsBoolean, IsString, MaxLength } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { User } from 'src/users/entities/user.entity';
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne, RelationId } from 'typeorm';
 
 @InputType('ProfileInputType', { isAbstract: true })
 @ObjectType()
@@ -25,9 +25,12 @@ export class Profile extends CoreEntity {
   @Column({ nullable: true })
   @IsString()
   @MaxLength(1000)
-  aboutMe: string;
+  aboutMe?: string;
 
   @OneToOne((type) => User, (user) => user.profile, { onDelete: 'CASCADE' })
   @JoinColumn()
   user: number;
+
+  @RelationId((profile: Profile) => profile.user)
+  userId: number;
 }
