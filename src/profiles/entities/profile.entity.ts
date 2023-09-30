@@ -1,9 +1,12 @@
-import { InputType, ObjectType } from '@nestjs/graphql';
+import { HideField, InputType, ObjectType } from '@nestjs/graphql';
 import { IsBoolean, IsString, MaxLength } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Column, Entity, JoinColumn, OneToOne, RelationId } from 'typeorm';
 
+/**
+ * Entity that describes user profile fields.
+ */
 @InputType('ProfileInputType', { isAbstract: true })
 @ObjectType()
 @Entity()
@@ -32,5 +35,6 @@ export class Profile extends CoreEntity {
   user: number;
 
   @RelationId((profile: Profile) => profile.user)
+  @HideField()
   userId: number;
 }

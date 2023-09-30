@@ -1,5 +1,5 @@
 import { InternalServerErrorException } from '@nestjs/common';
-import { HideField, InputType, ObjectType } from '@nestjs/graphql';
+import { InputType, ObjectType } from '@nestjs/graphql';
 import { IsEmail, IsString, Length, IsBoolean, IsDate } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToOne } from 'typeorm';
@@ -24,7 +24,6 @@ export class User extends CoreEntity {
 
   @Column({ select: false })
   @IsString()
-  @HideField()
   @Length(8, 255)
   password: string;
 

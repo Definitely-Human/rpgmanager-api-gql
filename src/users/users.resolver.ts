@@ -36,11 +36,11 @@ export class UserResolver {
   }
 
   @Mutation((returns) => EditUserOutput)
-  async editProfile(
+  async editUser(
     @AuthUser() authUser: User,
-    @Args('input') editProfileInput: EditUserInput,
+    @Args('input') editUserInput: EditUserInput,
   ): Promise<EditUserOutput> {
-    return this.usersService.editUser(authUser.id, editProfileInput);
+    return this.usersService.editUser(authUser.id, editUserInput);
   }
 
   @Mutation((returns) => VerifyEmailOutput)

@@ -8,4 +8,6 @@ export class EditUserInput extends PartialType(
 ) {}
 
 @ObjectType()
-export class EditUserOutput extends CoreOutput {}
+export class EditUserOutput extends CoreOutput {
+  user?: User;
+}

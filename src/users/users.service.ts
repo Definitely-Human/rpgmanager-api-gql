@@ -140,7 +140,7 @@ export class UsersService {
     { email, password }: EditUserInput,
   ): Promise<EditUserOutput> {
     try {
-      const user = await this.users.findOne({
+      let user = await this.users.findOne({
         where: {
           id: userId,
         },
@@ -157,9 +157,10 @@ export class UsersService {
       if (password) {
         user.password = password;
       }
-      await this.users.save(user);
+      user = await this.users.save(user);
       return {
         ok: true,
+        user,
       };
     } catch (error) {
       return {
