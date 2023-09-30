@@ -1,4 +1,4 @@
-import { InputType, ObjectType, PickType } from '@nestjs/graphql';
+import { Field, InputType, ObjectType, PickType } from '@nestjs/graphql';
 import { User } from '../entities/user.entity';
 import { CoreOutput } from 'src/common/dtos/output.dto';
 
@@ -7,7 +7,10 @@ export class CreateAccountInput extends PickType(User, [
   'email',
   'password',
   'username',
-]) {}
+]) {
+  @Field((type) => String)
+  password: string;
+}
 
 @ObjectType()
 export class CreateAccountOutput extends CoreOutput {}

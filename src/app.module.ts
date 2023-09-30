@@ -9,6 +9,8 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import * as Joi from 'joi';
 import { Verification } from './users/entities/verification.entity';
+import { ProfilesModule } from './profiles/profiles.module';
+import { Profile } from './profiles/entities/profile.entity';
 
 @Module({
   imports: [
@@ -35,7 +37,7 @@ import { Verification } from './users/entities/verification.entity';
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'prod',
       logging: process.env.NODE_ENV !== 'prod',
-      entities: [User, Verification],
+      entities: [User, Verification, Profile],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -55,6 +57,7 @@ import { Verification } from './users/entities/verification.entity';
     UsersModule,
     CommonModule,
     AuthModule.forRoot({ privateKey: process.env.SECRET_KEY }),
+    ProfilesModule,
   ],
   controllers: [],
   providers: [],

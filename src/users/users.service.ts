@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { GetUserOutput } from './dtos/get-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
@@ -11,6 +11,7 @@ import { EditUserInput, EditUserOutput } from './dtos/edit-user.dto';
 import { VerifyEmailOutput } from './dtos/verify-email.dto';
 import { Verification } from './entities/verification.entity';
 import { MeOutput } from './dtos/me.dto';
+import { ProfilesService } from 'src/profiles/profiles.service';
 
 @Injectable()
 export class UsersService {
@@ -18,6 +19,7 @@ export class UsersService {
     @InjectRepository(User) private readonly users: Repository<User>,
     @InjectRepository(Verification)
     private readonly verifications: Repository<Verification>,
+    private readonly profilesService: ProfilesService,
   ) {}
   /**
    *  Given id returns user and ok:true if user exists or ok:false error:true otherwise.
@@ -94,7 +96,11 @@ export class UsersService {
         this.users.create({ email, password, username }),
       );
 
-      // TODO: Create profile
+      const profileCreated = await this.profilesService.createProfile(user.id);
+      if (!profileCreated) {
+        this.users.delete({ id: user.id });
+        throw new InternalServerErrorException();
+      }
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const verification = await this.verifications.save(

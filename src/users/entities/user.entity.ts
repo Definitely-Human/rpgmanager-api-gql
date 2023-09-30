@@ -2,8 +2,9 @@ import { InternalServerErrorException } from '@nestjs/common';
 import { HideField, InputType, ObjectType } from '@nestjs/graphql';
 import { IsEmail, IsString, Length, IsBoolean, IsDate } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToOne } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Profile } from 'src/profiles/entities/profile.entity';
 
 /**
  * Class that describes account specific user fields
@@ -42,6 +43,9 @@ export class User extends CoreEntity {
   @Column({ nullable: true })
   @IsDate()
   lastLoginDate?: Date;
+
+  @OneToOne((type) => Profile, (profile) => profile.user)
+  profile: number;
 
   @BeforeInsert()
   @BeforeUpdate()
