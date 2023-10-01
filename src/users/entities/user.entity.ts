@@ -13,16 +13,16 @@ import { Profile } from 'src/profiles/entities/profile.entity';
 @ObjectType()
 @Entity()
 export class User extends CoreEntity {
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: false })
   @IsEmail()
   email: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: false })
   @IsString()
   @Length(4, 50)
   username: string;
 
-  @Column({ select: false })
+  @Column({ select: false, nullable: false })
   @IsString()
   @Length(8, 255)
   password: string;
@@ -43,7 +43,9 @@ export class User extends CoreEntity {
   @IsDate()
   lastLoginDate?: Date;
 
-  @OneToOne((type) => Profile, (profile) => profile.user)
+  @OneToOne((type) => Profile, (profile) => profile.user, {
+    onDelete: 'RESTRICT',
+  })
   profile: number;
 
   @BeforeInsert()
