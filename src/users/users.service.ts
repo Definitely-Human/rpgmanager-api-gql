@@ -11,7 +11,7 @@ import { EditUserInput, EditUserOutput } from './dtos/edit-user.dto';
 import { VerifyEmailOutput } from './dtos/verify-email.dto';
 import { Verification } from './entities/verification.entity';
 import { MeOutput } from './dtos/me.dto';
-import { ProfilesService } from 'src/profiles/profiles.service';
+import { ProfilesService } from '../profiles/profiles.service';
 
 @Injectable()
 export class UsersService {

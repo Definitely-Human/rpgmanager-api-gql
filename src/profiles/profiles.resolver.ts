@@ -3,8 +3,8 @@ import { Profile } from './entities/profile.entity';
 import { GetProfileInput, GetProfileOutput } from './dtos/get-profile.dto';
 import { ProfilesService } from './profiles.service';
 import { EditProfileInput, EditProfileOutput } from './dtos/edit-profile.dto';
-import { AuthUser } from 'src/auth/authUser.decorator';
-import { User } from 'src/users/entities/user.entity';
+import { User } from '../users/entities/user.entity';
+import { AuthUser } from '../auth/authUser.decorator';
 
 @Resolver((of) => Profile)
 export class ProfilesResolver {

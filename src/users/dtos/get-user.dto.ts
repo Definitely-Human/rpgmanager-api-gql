@@ -1,9 +1,10 @@
-import { InputType, ObjectType, PickType } from '@nestjs/graphql';
+import { Field, InputType, ObjectType, PickType } from '@nestjs/graphql';
 import { User } from '../entities/user.entity';
-import { CoreOutput } from 'src/common/dtos/output.dto';
+import { CoreOutput } from '../../common/dtos/output.dto';
 
 @InputType()
 export class GetUserInput {
+  @Field((type) => Number)
   userId: number;
 }
 
@@ -14,9 +15,13 @@ export class PublicUserOutput extends PickType(User, [
   'lastLoginDate',
   'createdAt',
 ]) {
+  @Field((type) => Number)
   id: number;
+  @Field((type) => String)
   username: string;
+  @Field((type) => Date, { nullable: true })
   lastLoginDate?: Date;
+  @Field((type) => Date)
   createdAt: Date;
 }
 /**
@@ -24,5 +29,6 @@ export class PublicUserOutput extends PickType(User, [
  */
 @ObjectType()
 export class GetUserOutput extends CoreOutput {
+  @Field((type) => PublicUserOutput, { nullable: true })
   user?: PublicUserOutput;
 }

@@ -2,9 +2,9 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from 'src/users/users.service';
 import { AuthRoles } from './authorize.decorator';
 import { AUTHORIZE } from './auth.constants';
+import { UsersService } from '../users/users.service';
 
 /**
  * Decides if user can access the resolver.

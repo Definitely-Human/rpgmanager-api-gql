@@ -1,7 +1,7 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { Profile } from 'src/profiles/entities/profile.entity';
-import { User } from 'src/users/entities/user.entity';
-import { Verification } from 'src/users/entities/verification.entity';
+import { User } from '../users/entities/user.entity';
+import { Verification } from '../users/entities/verification.entity';
+import { Profile } from '../profiles/entities/profile.entity';
 
 const environment = {
   dev: {

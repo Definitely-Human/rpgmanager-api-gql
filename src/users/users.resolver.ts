@@ -7,11 +7,11 @@ import {
   CreateAccountInput,
   CreateAccountOutput,
 } from './dtos/create-account.dto';
-import { AuthUser } from 'src/auth/authUser.decorator';
-import { Authorize } from 'src/auth/authorize.decorator';
 import { EditUserInput, EditUserOutput } from './dtos/edit-user.dto';
 import { VerifyEmailInput, VerifyEmailOutput } from './dtos/verify-email.dto';
 import { MeOutput } from './dtos/me.dto';
+import { Authorize } from '../auth/authorize.decorator';
+import { AuthUser } from '../auth/authUser.decorator';
 
 @Resolver((of) => User)
 export class UserResolver {

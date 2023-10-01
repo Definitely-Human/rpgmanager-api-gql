@@ -1,8 +1,8 @@
-import { HideField, InputType, ObjectType } from '@nestjs/graphql';
+import { Field, HideField, InputType, ObjectType } from '@nestjs/graphql';
 import { IsBoolean, IsString, MaxLength } from 'class-validator';
-import { CoreEntity } from 'src/common/entities/core.entity';
-import { User } from 'src/users/entities/user.entity';
 import { Column, Entity, JoinColumn, OneToOne, RelationId } from 'typeorm';
+import { User } from '../../users/entities/user.entity';
+import { CoreEntity } from '../../common/entities/core.entity';
 
 /**
  * Entity that describes user profile fields.
@@ -11,25 +11,30 @@ import { Column, Entity, JoinColumn, OneToOne, RelationId } from 'typeorm';
 @ObjectType()
 @Entity()
 export class Profile extends CoreEntity {
+  @Field((type) => Boolean)
   @Column({ default: false })
   @IsBoolean()
   isOnline: boolean;
 
+  @Field((type) => String, { nullable: true })
   @Column({ nullable: true })
   @IsString()
   @MaxLength(50)
   firstName?: string;
 
+  @Field((type) => String, { nullable: true })
   @Column({ nullable: true })
   @IsString()
   @MaxLength(50)
   lastName?: string;
 
+  @Field((type) => String, { nullable: true })
   @Column({ nullable: true })
   @IsString()
   @MaxLength(1000)
   aboutMe?: string;
 
+  @Field((type) => Number)
   @OneToOne((type) => User, (user) => user.profile, { onDelete: 'CASCADE' })
   @JoinColumn()
   user: number;

@@ -1,11 +1,11 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthResolver } from './auth.resolver';
-import { UsersModule } from 'src/users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth.guard';
 import { AuthModuleOptions } from './auth.interfaces';
+import { UsersModule } from '../users/users.module';
 
 @Module({})
 export class AuthModule {

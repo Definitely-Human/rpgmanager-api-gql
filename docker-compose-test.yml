@@ -1,0 +1,42 @@
+version: '3.9'
+
+services:
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      # Only will build development stage from our dockerfile
+      target: development
+    environment:
+      - NODE_ENV=test
+    # Run a command against the development stage of the image
+    command: npm run test:e2e
+
+    volumes:
+      - /usr/src/app/node_modules
+      - .:/usr/src/app
+    ports:
+      - 3001:3000
+    depends_on:
+      - postgres
+    container_name: api_container-test
+    networks:
+      - sharedNet-test
+
+  postgres:
+    image: postgres
+    restart: always
+    container_name: postgres_container-test
+    environment:
+      POSTGRES_DB: rpg-manager-db-test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5432:5432'
+    env_file:
+      - .env.test
+    networks:
+      - sharedNet-test
+
+networks:
+  sharedNet-test:

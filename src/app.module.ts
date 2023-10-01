@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import * as Joi from 'joi';
 import { ProfilesModule } from './profiles/profiles.module';
 import { DatabaseConfig } from './config/config.database';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -29,7 +30,7 @@ import { DatabaseConfig } from './config/config.database';
     TypeOrmModule.forRoot(DatabaseConfig()),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: true,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
       subscriptions: {
         'subscriptions-transport-ws': {

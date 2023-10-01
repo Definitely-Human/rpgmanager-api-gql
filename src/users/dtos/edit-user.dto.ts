@@ -1,6 +1,12 @@
-import { ObjectType, PickType, PartialType, InputType } from '@nestjs/graphql';
-import { CoreOutput } from 'src/common/dtos/output.dto';
+import {
+  ObjectType,
+  PickType,
+  PartialType,
+  InputType,
+  Field,
+} from '@nestjs/graphql';
 import { User } from '../entities/user.entity';
+import { CoreOutput } from '../../common/dtos/output.dto';
 
 @InputType()
 export class EditUserInput extends PartialType(
@@ -9,5 +15,6 @@ export class EditUserInput extends PartialType(
 
 @ObjectType()
 export class EditUserOutput extends CoreOutput {
+  @Field((type) => User, { nullable: true })
   user?: User;
 }
