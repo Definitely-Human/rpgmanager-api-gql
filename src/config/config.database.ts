@@ -10,7 +10,7 @@ const environment = {
   },
   test: {
     synchronize: true,
-    logging: true,
+    logging: false,
     dropSchema: true,
   },
   prod: {

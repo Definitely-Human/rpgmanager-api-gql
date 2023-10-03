@@ -86,10 +86,12 @@ type Mutation {
 
 type Profile {
   aboutMe: String
+  createdAt: DateTime!
   firstName: String
   id: ID!
   isOnline: Boolean!
   lastName: String
+  updatedAt: DateTime!
   user: Float!
 }
 
@@ -108,6 +110,7 @@ type Query {
 }
 
 type User {
+  createdAt: DateTime!
   email: String!
   id: ID!
   isActive: Boolean!
@@ -116,6 +119,7 @@ type User {
   lastLoginDate: DateTime!
   password: String!
   profile: Float!
+  updatedAt: DateTime!
   username: String!
 }
 
