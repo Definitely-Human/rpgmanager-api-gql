@@ -151,7 +151,17 @@ export class UsersService {
         user.email = email;
         user.isVerified = false;
 
-        const verification = await this.verifications.save(
+        let verification = await this.verifications.findOne({
+          where: {
+            user: {
+              id: userId,
+            },
+          },
+        });
+
+        if (verification) this.verifications.delete(verification.id);
+
+        verification = await this.verifications.save(
           this.verifications.create({ user: user }),
         );
         this.mailService.sendVerificationEmail(user.email, verification.code);
@@ -181,11 +191,12 @@ export class UsersService {
         },
         relations: ['user'],
       });
-      if (verification) {
-        verification.user.isVerified = true;
-        await this.users.save(verification.user);
-        await this.verifications.delete(verification.id);
+      if (!verification) {
+        return { ok: false, error: 'Incorrect verification code.' };
       }
+      verification.user.isVerified = true;
+      await this.users.save(verification.user);
+      await this.verifications.delete(verification.id);
       return { ok: true };
     } catch (e) {
       console.log(e);

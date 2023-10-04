@@ -6,6 +6,7 @@ import * as request from 'supertest';
 import { UsersService } from '../src/users/users.service';
 import { CreateAccountInput } from '../src/users/dtos/create-account.dto';
 import { AuthService } from '../src/auth/auth.service';
+import { Verification } from '../src/users/entities/verification.entity';
 
 describe('UserService', () => {
   let dataSource: DataSource;
@@ -314,6 +315,7 @@ describe('UserService', () => {
         })
         .expect(200)
         .expect((res) => {
+          console.log(res.body);
           expect(res.body.data.editUser).toEqual({
             ok: true,
             error: null,
@@ -322,6 +324,40 @@ describe('UserService', () => {
               password: '',
             },
           });
+        });
+    });
+    it('should create new email verification when changing email', async () => {
+      const verification = await dataSource
+        .getRepository(Verification)
+        .createQueryBuilder('verification')
+        .getOne();
+      const newData = {
+        email: 'new@example.com',
+      };
+      return request(app.getHttpServer())
+        .post(gql)
+        .set('x-jwt', token)
+        .send({
+          query: `
+          mutation {
+            editUser(input: {email: "${newData.email}"}){
+              ok
+              error
+            }
+          }
+          `,
+        })
+        .expect(200)
+        .expect(async (res) => {
+          expect(res.body.data.editUser).toEqual({
+            ok: true,
+            error: null,
+          });
+          const newVerification = await dataSource
+            .getRepository(Verification)
+            .createQueryBuilder('verification')
+            .getOne();
+          expect(newVerification.code).not.toEqual(verification.code);
         });
     });
     it('should return specified profile', async () => {
@@ -397,7 +433,65 @@ describe('UserService', () => {
           });
         });
     });
+    it("should verify user's email", async () => {
+      const verification = await dataSource
+        .getRepository(Verification)
+        .createQueryBuilder('verification')
+        .getOne();
+      return request(app.getHttpServer())
+        .post(gql)
+        .set('x-jwt', token)
+        .send({
+          query: `
+          mutation {
+            verifyEmail(input: {code:"${verification.code}"}){
+              ok
+              error
+            }
+          }
+          `,
+        })
+        .expect(200)
+        .expect(async (res) => {
+          expect(res.body.data.verifyEmail).toEqual({
+            ok: true,
+            error: null,
+          });
+          const verificationExists = await dataSource
+            .getRepository(Verification)
+            .createQueryBuilder('verification')
+            .getOne();
+          expect(verificationExists).toBe(null);
+        });
+    });
+    it("should not verify user's email with incorrect code", async () => {
+      const verification = await dataSource
+        .getRepository(Verification)
+        .createQueryBuilder('verification')
+        .getOne();
+      return request(app.getHttpServer())
+        .post(gql)
+        .set('x-jwt', token)
+        .send({
+          query: `
+          mutation {
+            verifyEmail(input: {code:"asdfa"}){
+              ok
+              error
+            }
+          }
+          `,
+        })
+        .expect(200)
+        .expect(async (res) => {
+          expect(res.body.data.verifyEmail.ok).toBe(false);
+          expect(res.body.data.verifyEmail.error).toEqual(expect.any(String));
+          const verificationExists = await dataSource
+            .getRepository(Verification)
+            .createQueryBuilder('verification')
+            .getOne();
+          expect(verificationExists).toEqual(verification);
+        });
+    });
   });
 });
-
-// verifyEmail(...): VerifyEmailOutput!
