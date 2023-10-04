@@ -315,7 +315,6 @@ describe('UserService', () => {
         })
         .expect(200)
         .expect((res) => {
-          console.log(res.body);
           expect(res.body.data.editUser).toEqual({
             ok: true,
             error: null,
