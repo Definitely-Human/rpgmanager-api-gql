@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import * as Joi from 'joi';
 import { ProfilesModule } from './profiles/profiles.module';
 import { DatabaseConfig } from './config/config.database';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -24,6 +25,10 @@ import { DatabaseConfig } from './config/config.database';
         DB_PASSWORD: Joi.string().required(),
         DB_NAME: Joi.string().required(),
         SECRET_KEY: Joi.string().required(),
+        MAILGUN_API_KEY: Joi.string().required(),
+        MAILGUN_DOMAIN_NAME: Joi.string().required(),
+        MAILGUN_FROM_EMAIL: Joi.string().required(),
+        MAIL_ACTIVE: Joi.boolean().required(),
       }),
     }),
     TypeOrmModule.forRoot(DatabaseConfig()),
@@ -47,6 +52,12 @@ import { DatabaseConfig } from './config/config.database';
     CommonModule,
     AuthModule.forRoot({ privateKey: process.env.SECRET_KEY }),
     ProfilesModule,
+    MailModule.forRoot({
+      apiKey: process.env.MAILGUN_API_KEY,
+      domain: process.env.MAILGUN_DOMAIN_NAME,
+      fromEmail: process.env.MAILGUN_FROM_EMAIL,
+      isActive: process.env.MAIL_ACTIVE === 'true',
+    }),
   ],
   controllers: [],
   providers: [],

@@ -12,6 +12,7 @@ import { VerifyEmailOutput } from './dtos/verify-email.dto';
 import { Verification } from './entities/verification.entity';
 import { MeOutput } from './dtos/me.dto';
 import { ProfilesService } from '../profiles/profiles.service';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class UsersService {
@@ -20,6 +21,7 @@ export class UsersService {
     @InjectRepository(Verification)
     private readonly verifications: Repository<Verification>,
     private readonly profilesService: ProfilesService,
+    private readonly mailService: MailService,
   ) {}
   /**
    *  Given id returns user and ok:true if user exists or ok:false error:true otherwise.
@@ -103,14 +105,13 @@ export class UsersService {
         throw new InternalServerErrorException();
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const verification = await this.verifications.save(
         this.verifications.create({
           user: user,
         }),
       );
 
-      // this.mailService.sendVerificationEmail(user.email, verification.code);
+      this.mailService.sendVerificationEmail(user.email, verification.code);
 
       return { ok: true };
     } catch (error) {
@@ -149,11 +150,11 @@ export class UsersService {
       if (email) {
         user.email = email;
         user.isVerified = false;
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
         const verification = await this.verifications.save(
-          this.verifications.create(user),
+          this.verifications.create({ user: user }),
         );
-        // this.mailService.sendVerificationEmail(user.email, verification.code);
+        this.mailService.sendVerificationEmail(user.email, verification.code);
       }
       if (password) {
         user.password = password;
@@ -188,7 +189,7 @@ export class UsersService {
       return { ok: true };
     } catch (e) {
       console.log(e);
-      return { ok: false };
+      return { ok: false, error: 'Error when verifying email' };
     }
   }
 }
