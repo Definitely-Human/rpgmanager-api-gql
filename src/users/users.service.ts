@@ -58,6 +58,7 @@ export class UsersService {
 
   async me(user: User): Promise<MeOutput> {
     try {
+      user.password = '';
       return {
         ok: true,
         user,
@@ -158,6 +159,7 @@ export class UsersService {
         user.password = password;
       }
       user = await this.users.save(user);
+      user.password = ''; // Remove password before returning user data.
       return {
         ok: true,
         user,

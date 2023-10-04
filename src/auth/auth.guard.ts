@@ -18,32 +18,37 @@ export class AuthGuard implements CanActivate {
     private readonly userService: UsersService,
   ) {}
   async canActivate(context: ExecutionContext) {
-    const roles = this.reflector.get<AuthRoles>(
-      AUTHORIZE,
-      context.getHandler(),
-    );
-    if (roles && roles.includes('Any')) {
-      return true;
-    }
-    const gqlContext = GqlExecutionContext.create(context).getContext();
-    const token = gqlContext['token'];
-    if (!token) return false;
-    const decoded = this.jwtService.verify(token.toString());
-    if (typeof decoded === 'object' && decoded.hasOwnProperty('userId')) {
-      const user = await this.userService.getUserById(decoded['userId']);
-      if (!user) {
-        return false;
-      }
-      gqlContext['user'] = user;
-      if (!roles) {
+    try {
+      const roles = this.reflector.get<AuthRoles>(
+        AUTHORIZE,
+        context.getHandler(),
+      );
+      if (roles && roles.includes('Any')) {
         return true;
       }
-      if (roles.includes('Admin')) {
-        return user.isStuff;
+      const gqlContext = GqlExecutionContext.create(context).getContext();
+      const token = gqlContext['token'];
+      if (!token) return false;
+      const decoded = this.jwtService.verify(token.toString());
+      if (typeof decoded === 'object' && decoded.hasOwnProperty('userId')) {
+        const user = await this.userService.getUserById(decoded['userId']);
+        if (!user) {
+          return false;
+        }
+        gqlContext['user'] = user;
+        if (!roles) {
+          return true;
+        }
+        if (roles.includes('Admin')) {
+          return user.isStuff;
+        }
+        console.log(`Unknown role user: ${user}`);
+        return false;
+      } else {
+        return false;
       }
-      console.log(`Unknown role user: ${user}`);
-      return false;
-    } else {
+    } catch (error) {
+      console.log(error);
       return false;
     }
   }
