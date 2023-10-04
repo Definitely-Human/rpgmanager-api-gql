@@ -56,7 +56,7 @@ export class ProfilesService {
   ): Promise<EditProfileOutput> {
     try {
       let profile = await this.profiles.findOne({
-        where: { id: editProfileInput.profileId },
+        where: { user: user.id },
       });
       if (!profile) {
         return {

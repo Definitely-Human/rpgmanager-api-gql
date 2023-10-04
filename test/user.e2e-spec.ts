@@ -290,7 +290,7 @@ describe('UserService', () => {
           expect(res.body.data.getUser.error).toEqual(expect.any(String));
         });
     });
-    it("should edit user's profile", async () => {
+    it("should edit user's account", async () => {
       const newData = {
         email: 'new@example.com',
         password: 'newPass123',
@@ -324,9 +324,80 @@ describe('UserService', () => {
           });
         });
     });
+    it('should return specified profile', async () => {
+      usersService = moduleFixture.get<UsersService>(UsersService);
+      const testUser2 = {
+        username: 'testUser2',
+        email: 'test2@example.com',
+        password: testUser.password,
+      };
+      await usersService.createAccount(testUser2);
+      return request(app.getHttpServer())
+        .post(gql)
+        .set('x-jwt', token)
+        .send({
+          query: `
+          {
+            getProfile(input: { profileId: 1 }) {
+              ok
+              error
+              profile {
+                isOnline
+                id
+              }
+            }
+          }
+          `,
+        })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.data.getProfile).toEqual({
+            ok: true,
+            error: null,
+            profile: {
+              isOnline: false,
+              id: '1',
+            },
+          });
+        });
+    });
+    it("should edit user's profile", async () => {
+      const newData = {
+        firstName: 'Bob',
+        lastName: 'Smith',
+      };
+      return request(app.getHttpServer())
+        .post(gql)
+        .set('x-jwt', token)
+        .send({
+          query: `
+          mutation {
+            editProfile(input: {firstName: "${newData.firstName}" lastName: "${newData.lastName}"}){
+              ok
+              error
+              profile {
+                id
+                firstName
+                lastName
+              }
+            }
+          }
+          `,
+        })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.data.editProfile).toEqual({
+            ok: true,
+            error: null,
+            profile: {
+              id: '1',
+              firstName: newData.firstName,
+              lastName: newData.lastName,
+            },
+          });
+        });
+    });
   });
 });
 
-// getProfile(...): GetProfileOutput!
-// editProfile(...): EditProfileOutput!
 // verifyEmail(...): VerifyEmailOutput!
