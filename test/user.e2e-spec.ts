@@ -58,6 +58,11 @@ describe('UserService', () => {
             ) {
               ok
               error
+              user{
+                id
+                email
+                username
+              }
             }
           }
           `,
@@ -67,6 +72,11 @@ describe('UserService', () => {
           expect(res.body.data.createAccount).toEqual({
             ok: true,
             error: null,
+            user: {
+              id: 1,
+              email: testUser.email,
+              username: testUser.username,
+            },
           });
         });
     });
@@ -391,7 +401,7 @@ describe('UserService', () => {
             error: null,
             profile: {
               isOnline: false,
-              id: '1',
+              id: 1,
             },
           });
         });
@@ -425,7 +435,7 @@ describe('UserService', () => {
             ok: true,
             error: null,
             profile: {
-              id: '1',
+              id: 1,
               firstName: newData.firstName,
               lastName: newData.lastName,
             },

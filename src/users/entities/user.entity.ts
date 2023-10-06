@@ -3,6 +3,7 @@ import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import * as bcrypt from 'bcrypt';
 import { IsBoolean, IsDate, IsEmail, IsString, Length } from 'class-validator';
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToOne } from 'typeorm';
+import { Character } from '../../character/entities/character.entity';
 import { CoreEntity } from '../../common/entities/core.entity';
 import { Profile } from '../../profiles/entities/profile.entity';
 
@@ -50,11 +51,17 @@ export class User extends CoreEntity {
   @IsDate()
   lastLoginDate?: Date;
 
-  @Field((type) => Number)
+  @Field((type) => Profile)
   @OneToOne((type) => Profile, (profile) => profile.user, {
     onDelete: 'RESTRICT',
   })
-  profile: number;
+  profile: Profile;
+
+  @Field((type) => Character)
+  @OneToOne((type) => Profile, (profile) => profile.user, {
+    onDelete: 'RESTRICT',
+  })
+  character: Character;
 
   @BeforeInsert()
   @BeforeUpdate()

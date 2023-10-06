@@ -113,7 +113,7 @@ export class UsersService {
 
       this.mailService.sendVerificationEmail(user.email, verification.code);
 
-      return { ok: true };
+      return { ok: true, user };
     } catch (error) {
       console.log(error);
       return {
