@@ -1,0 +1,35 @@
+version: '3.9'
+
+services:
+  api-test:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      # Only will build development stage from our dockerfile
+      target: development
+    environment:
+      - NODE_ENV=test
+    # Run a command against the development stage of the image
+    volumes:
+      - /usr/src/app/node_modules
+      - .:/usr/src/app
+    depends_on:
+      - postgres-test
+    container_name: api_container-test
+    networks:
+      - sharedNet-test
+    links:
+      - postgres-test
+
+  postgres-test:
+    image: postgres
+    container_name: postgres_container-test
+    ports:
+      - '5432:5432'
+    env_file:
+      - .env.test
+    networks:
+      - sharedNet-test
+
+networks:
+  sharedNet-test:

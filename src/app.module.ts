@@ -4,9 +4,12 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { UsersModule } from './users/users.module';
 import { CommonModule } from './common/common.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './users/entities/user.entity';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 import * as Joi from 'joi';
+import { ProfilesModule } from './profiles/profiles.module';
+import { DatabaseConfig } from './config/config.database';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -22,26 +25,39 @@ import * as Joi from 'joi';
         DB_PASSWORD: Joi.string().required(),
         DB_NAME: Joi.string().required(),
         SECRET_KEY: Joi.string().required(),
+        MAILGUN_API_KEY: Joi.string().required(),
+        MAILGUN_DOMAIN_NAME: Joi.string().required(),
+        MAILGUN_FROM_EMAIL: Joi.string().required(),
+        MAIL_ACTIVE: Joi.boolean().required(),
       }),
     }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.DB_HOST,
-      port: +process.env.DB_PORT,
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      synchronize: process.env.NODE_ENV !== 'prod',
-      logging: process.env.NODE_ENV !== 'prod',
-      entities: [User],
-    }),
+    TypeOrmModule.forRoot(DatabaseConfig()),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
+      // autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
+      subscriptions: {
+        'subscriptions-transport-ws': {
+          onConnect: (connectionParams) => {
+            return { token: connectionParams['x-jwt'] };
+          },
+        },
+      },
+      context: ({ req }) => {
+        return { token: req.headers['x-jwt'] };
+      },
     }),
     UsersModule,
     CommonModule,
+    AuthModule.forRoot({ privateKey: process.env.SECRET_KEY }),
+    ProfilesModule,
+    MailModule.forRoot({
+      apiKey: process.env.MAILGUN_API_KEY,
+      domain: process.env.MAILGUN_DOMAIN_NAME,
+      fromEmail: process.env.MAILGUN_FROM_EMAIL,
+      isActive: process.env.MAIL_ACTIVE === 'true',
+    }),
   ],
   controllers: [],
   providers: [],

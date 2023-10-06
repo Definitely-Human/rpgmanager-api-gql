@@ -1,9 +1,10 @@
 import { InternalServerErrorException } from '@nestjs/common';
-import { InputType, ObjectType } from '@nestjs/graphql';
-import { IsEmail, IsString, Length, IsBoolean, IsDate } from 'class-validator';
-import { CoreEntity } from 'src/common/entities/core.entity';
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
+import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import * as bcrypt from 'bcrypt';
+import { IsBoolean, IsDate, IsEmail, IsString, Length } from 'class-validator';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToOne } from 'typeorm';
+import { CoreEntity } from '../../common/entities/core.entity';
+import { Profile } from '../../profiles/entities/profile.entity';
 
 /**
  * Class that describes account specific user fields
@@ -12,31 +13,48 @@ import * as bcrypt from 'bcrypt';
 @ObjectType()
 @Entity()
 export class User extends CoreEntity {
-  @Column({ unique: true })
+  @Field((type) => String)
+  @Column({ unique: true, nullable: false })
   @IsEmail()
   email: string;
 
-  @Column()
+  @Field((type) => String)
+  @Column({ unique: true, nullable: false })
   @IsString()
   @Length(4, 50)
   username: string;
 
-  @Column({ select: false })
+  @Field((type) => String)
+  @Column({ select: false, nullable: false })
   @IsString()
   @Length(8, 255)
   password: string;
 
+  @Field((type) => Boolean)
   @Column({ default: true })
   @IsBoolean()
   isActive: boolean;
 
+  @Field((type) => Boolean)
   @Column({ default: false })
   @IsBoolean()
   isStuff: boolean;
 
+  @Field((type) => Boolean)
+  @Column({ default: false })
+  @IsBoolean()
+  isVerified: boolean;
+
+  @Field((type) => Date)
   @Column({ nullable: true })
   @IsDate()
-  lastLoginDate?: boolean;
+  lastLoginDate?: Date;
+
+  @Field((type) => Number)
+  @OneToOne((type) => Profile, (profile) => profile.user, {
+    onDelete: 'RESTRICT',
+  })
+  profile: number;
 
   @BeforeInsert()
   @BeforeUpdate()

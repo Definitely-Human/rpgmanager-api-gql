@@ -1,0 +1,24 @@
+---
+name: Checks
+
+on: [workflow_dispatch]
+
+jobs:
+  test-lint:
+    name: Test and Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: 'Create env file'
+        run: |
+          echo "${{ vars.ENV_FILE }}" > .env.test
+      - name: Unit Test
+        run: docker-compose -f docker-compose-test.yml run --rm api-test sh -c "npm run test:e2e"
+      - name: Lint
+        run: docker-compose -f docker-compose-test.yml run --rm api-test sh -c "npm run lint"
