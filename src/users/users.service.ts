@@ -1,18 +1,18 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { GetUserOutput } from './dtos/get-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import { MailService } from '../mail/mail.service';
+import { ProfilesService } from '../profiles/profiles.service';
 import {
   CreateAccountInput,
   CreateAccountOutput,
 } from './dtos/create-account.dto';
 import { EditUserInput, EditUserOutput } from './dtos/edit-user.dto';
-import { VerifyEmailOutput } from './dtos/verify-email.dto';
-import { Verification } from './entities/verification.entity';
+import { GetUserOutput } from './dtos/get-user.dto';
 import { MeOutput } from './dtos/me.dto';
-import { ProfilesService } from '../profiles/profiles.service';
-import { MailService } from '../mail/mail.service';
+import { VerifyEmailOutput } from './dtos/verify-email.dto';
+import { User } from './entities/user.entity';
+import { Verification } from './entities/verification.entity';
 
 @Injectable()
 export class UsersService {

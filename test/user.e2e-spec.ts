@@ -1,12 +1,12 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AppModule } from '../src/app.module';
-import { DataSource } from 'typeorm';
 import { INestApplication } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
-import { UsersService } from '../src/users/users.service';
-import { CreateAccountInput } from '../src/users/dtos/create-account.dto';
+import { DataSource } from 'typeorm';
+import { AppModule } from '../src/app.module';
 import { AuthService } from '../src/auth/auth.service';
+import { CreateAccountInput } from '../src/users/dtos/create-account.dto';
 import { Verification } from '../src/users/entities/verification.entity';
+import { UsersService } from '../src/users/users.service';
 
 describe('UserService', () => {
   let dataSource: DataSource;
