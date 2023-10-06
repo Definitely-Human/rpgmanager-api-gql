@@ -18,6 +18,8 @@ services:
     container_name: api_container-test
     networks:
       - sharedNet-test
+    links:
+      - postgres-test
 
   postgres-test:
     image: postgres
