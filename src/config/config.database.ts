@@ -4,6 +4,7 @@ import { Profile } from '../profiles/entities/profile.entity';
 import { User } from '../users/entities/user.entity';
 import { Verification } from '../users/entities/verification.entity';
 
+
 const environment = {
   dev: {
     synchronize: true,

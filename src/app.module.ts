@@ -12,6 +12,7 @@ import { DatabaseConfig } from './config/config.database';
 import { MailModule } from './mail/mail.module';
 import { CharacterModule } from './character/character.module';
 
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -60,6 +61,7 @@ import { CharacterModule } from './character/character.module';
       isActive: process.env.MAIL_ACTIVE === 'true',
     }),
     CharacterModule,
+
   ],
   controllers: [],
   providers: [],
