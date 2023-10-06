@@ -10,6 +10,7 @@ import * as Joi from 'joi';
 import { ProfilesModule } from './profiles/profiles.module';
 import { DatabaseConfig } from './config/config.database';
 import { MailModule } from './mail/mail.module';
+import { CharacterModule } from './character/character.module';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { MailModule } from './mail/mail.module';
       fromEmail: process.env.MAILGUN_FROM_EMAIL,
       isActive: process.env.MAIL_ACTIVE === 'true',
     }),
+    CharacterModule,
   ],
   controllers: [],
   providers: [],
