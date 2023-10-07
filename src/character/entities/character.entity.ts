@@ -1,7 +1,8 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { IsInt, IsPositive, IsString, Length } from 'class-validator';
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
 import { CoreEntity } from '../../common/entities/core.entity';
+import { Task } from '../../tasks/entities/task.entity';
 import { User } from '../../users/entities/user.entity';
 
 @InputType('CharacterInputType', { isAbstract: true })
@@ -29,4 +30,7 @@ export class Character extends CoreEntity {
   @Column({ nullable: false, default: 0 })
   @IsInt()
   coins: number;
+
+  @OneToMany((type) => Task, (task) => task.character)
+  tasks: Task[];
 }

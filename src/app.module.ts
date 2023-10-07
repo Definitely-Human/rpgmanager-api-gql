@@ -11,6 +11,7 @@ import { DatabaseConfig } from './config/config.database';
 import { MailModule } from './mail/mail.module';
 import { ProfilesModule } from './profiles/profiles.module';
 import { UsersModule } from './users/users.module';
+import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { UsersModule } from './users/users.module';
       isActive: process.env.MAIL_ACTIVE === 'true',
     }),
     CharacterModule,
+    TasksModule,
   ],
   controllers: [],
   providers: [],
