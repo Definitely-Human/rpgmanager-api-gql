@@ -21,6 +21,6 @@ jobs:
       # - name: E2E Test
       #   run: docker-compose -f docker-compose-test.yml run --rm api-test sh -c "npm run test:e2e"
       # - name: Unit Test
-      #   run: docker-compose -f docker-compose-test.yml run --rm api-test sh -c "npm run test"
+      #   run: docker-compose -f docker-compose-test.yml run --rm --no-deps api-test sh -c "npm run test"
       - name: Lint
-        run: docker-compose -f docker-compose-test.yml run --rm api-test sh -c "npm run lint"
+        run: docker-compose -f docker-compose-test.yml run --rm --no-deps api-test sh -c "npm run lint"
