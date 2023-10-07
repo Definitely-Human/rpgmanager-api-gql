@@ -2,7 +2,10 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthUser } from '../auth/authUser.decorator';
 import { User } from '../users/entities/user.entity';
 import { CreateTaskInput, CreateTaskOutput } from './dtos/create-task.dto';
+import { DeleteTaskInput, DeleteTaskOutput } from './dtos/delete-task.dto';
+import { EditTaskInput, EditTaskOutput } from './dtos/edit-task.dto';
 import { GetTaskInput, GetTaskOutput } from './dtos/get-task.dto';
+import { GetTasksOutput } from './dtos/get-tasks.dto';
 import { Task } from './entities/task.entity';
 import { TasksService } from './tasks.service';
 
@@ -24,5 +27,26 @@ export class TasksResolver {
     @AuthUser() authUser: User,
   ): Promise<GetTaskOutput> {
     return this.tasksService.getTask(getTaskInput, authUser);
+  }
+
+  @Query((returns) => GetTasksOutput)
+  async getTasks(@AuthUser() authUser: User): Promise<GetTasksOutput> {
+    return this.tasksService.getTasks(authUser);
+  }
+
+  @Mutation((returns) => EditTaskOutput)
+  async editTask(
+    @Args('input') editTaskInput: EditTaskInput,
+    @AuthUser() authUser: User,
+  ): Promise<EditTaskOutput> {
+    return this.tasksService.editTask(editTaskInput, authUser);
+  }
+
+  @Mutation((returns) => DeleteTaskOutput)
+  async deleteTask(
+    @Args('input') deleteTaskInput: DeleteTaskInput,
+    @AuthUser() authUser: User,
+  ): Promise<DeleteTaskOutput> {
+    return this.tasksService.deleteTask(deleteTaskInput, authUser);
   }
 }

@@ -1,27 +1,27 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Task } from './entities/task.entity';
-import { TasksService } from './tasks.service';
+import { Profile } from './entities/profile.entity';
+import { ProfilesService } from './profiles.service';
 
-const mockTaskRepo = {
+const mockProfileRepo = {
   findOne: jest.fn(),
   save: jest.fn(),
   create: jest.fn(),
   delete: jest.fn(),
 };
 
-describe('TasksService', () => {
-  let service: TasksService;
+describe('ProfilesService', () => {
+  let service: ProfilesService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        TasksService,
-        { provide: getRepositoryToken(Task), useValue: mockTaskRepo },
+        ProfilesService,
+        { provide: getRepositoryToken(Profile), useValue: mockProfileRepo },
       ],
     }).compile();
 
-    service = module.get<TasksService>(TasksService);
+    service = module.get<ProfilesService>(ProfilesService);
   });
 
   it('should be defined', () => {
