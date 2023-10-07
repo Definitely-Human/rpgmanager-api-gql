@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ObjectLiteral, Repository } from 'typeorm';
 import { MailService } from '../mail/mail.service';
 import { Profile } from '../profiles/entities/profile.entity';
 import { ProfilesService } from '../profiles/profiles.service';
@@ -23,7 +23,9 @@ const mockMailService = () => ({
   sendVerificationEmail: jest.fn(),
 });
 
-type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
+type MockRepository<T extends ObjectLiteral = any> = Partial<
+  Record<keyof Repository<T>, jest.Mock>
+>;
 
 describe('UserService', () => {
   let service: UsersService;
@@ -65,9 +67,9 @@ describe('UserService', () => {
       password: 'pass1234',
       email: 'user@example.com',
     };
-    userRepository.findOne.mockResolvedValue(null);
-    userRepository.save.mockResolvedValue(userData);
-    verificationRepository.save.mockResolvedValue({ code: 'abc' });
+    userRepository.findOne?.mockResolvedValue(null);
+    userRepository.save?.mockResolvedValue(userData);
+    verificationRepository.save?.mockResolvedValue({ code: 'abc' });
     const result = await service.createAccount(userData);
     expect(result).toEqual({ ok: true, error: undefined, user: userData });
   });
@@ -78,7 +80,7 @@ describe('UserService', () => {
       password: 'pass1234',
       email: 'user@example.com',
     };
-    userRepository.findOne.mockResolvedValue({
+    userRepository.findOne?.mockResolvedValue({
       userData,
     });
     const result = await service.createAccount(userData);
