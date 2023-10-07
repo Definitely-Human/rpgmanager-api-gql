@@ -28,7 +28,10 @@ export class UsersService {
    */
   async getUserById(userId: number): Promise<User> {
     try {
-      const user = await this.users.findOne({ where: { id: userId } });
+      const user = await this.users.findOne({
+        where: { id: userId },
+        loadRelationIds: true,
+      });
       if (!user) {
         return null;
       }

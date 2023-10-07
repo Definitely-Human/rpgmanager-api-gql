@@ -1,3 +1,4 @@
 {
-  "cSpell.words": ["nestjs"]
+  "cSpell.words": ["nestjs"],
+  "editor.indentSize": 2
 }
