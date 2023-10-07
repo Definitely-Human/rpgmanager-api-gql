@@ -58,7 +58,7 @@ export class User extends CoreEntity {
   profile: Profile;
 
   @Field((type) => Character)
-  @OneToOne((type) => Profile, (profile) => profile.user, {
+  @OneToOne((type) => Character, (character) => character.user, {
     onDelete: 'RESTRICT',
   })
   character: Character;

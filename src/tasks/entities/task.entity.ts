@@ -19,6 +19,7 @@ import { CoreEntity } from '../../common/entities/core.entity';
 export class Task extends CoreEntity {
   @ManyToOne((type) => Character, (character) => character.tasks, {
     onDelete: 'CASCADE',
+    nullable: false,
   })
   character: Character;
 
@@ -26,7 +27,7 @@ export class Task extends CoreEntity {
   @Column({ nullable: false })
   @IsString()
   @Length(1, 100)
-  length: string;
+  title: string;
 
   @Field((type) => String, { nullable: true })
   @Column({ nullable: false, default: '' })
