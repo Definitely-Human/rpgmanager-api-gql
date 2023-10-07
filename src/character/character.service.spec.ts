@@ -5,12 +5,12 @@ import { User } from '../users/entities/user.entity';
 import { CharacterService } from './character.service';
 import { Character } from './entities/character.entity';
 
-const mockCharRepo = {
+const mockRepository = () => ({
   findOne: jest.fn(),
   save: jest.fn(),
   create: jest.fn(),
   delete: jest.fn(),
-};
+});
 
 type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 
@@ -22,7 +22,7 @@ describe('CharacterService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CharacterService,
-        { provide: getRepositoryToken(Character), useValue: mockCharRepo },
+        { provide: getRepositoryToken(Character), useValue: mockRepository() },
       ],
     }).compile();
 
