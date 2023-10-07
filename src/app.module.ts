@@ -1,17 +1,16 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
-import { UsersModule } from './users/users.module';
-import { CommonModule } from './common/common.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { AuthModule } from './auth/auth.module';
+import { GraphQLModule } from '@nestjs/graphql';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import * as Joi from 'joi';
-import { ProfilesModule } from './profiles/profiles.module';
+import { AuthModule } from './auth/auth.module';
+import { CharacterModule } from './character/character.module';
+import { CommonModule } from './common/common.module';
 import { DatabaseConfig } from './config/config.database';
 import { MailModule } from './mail/mail.module';
-import { CharacterModule } from './character/character.module';
-
+import { ProfilesModule } from './profiles/profiles.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -61,7 +60,6 @@ import { CharacterModule } from './character/character.module';
       isActive: process.env.MAIL_ACTIVE === 'true',
     }),
     CharacterModule,
-
   ],
   controllers: [],
   providers: [],
