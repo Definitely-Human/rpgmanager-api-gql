@@ -65,11 +65,11 @@ export class User extends CoreEntity {
   })
   profile: Profile;
 
-  @Field((type) => Character)
+  @Field((type) => Character, { nullable: true })
   @OneToOne((type) => Character, (character) => character.user, {
-    onDelete: 'RESTRICT',
+    onDelete: 'SET NULL',
   })
-  character: Character;
+  character?: Character;
 
   @Field((type) => [Category])
   @OneToMany((type) => Category, (category) => category.user)

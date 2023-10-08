@@ -22,10 +22,7 @@ export class TasksService {
     try {
       if (user.character === undefined)
         return { ok: false, error: 'Character does not exist.' };
-      console.log(
-        '🚀 ~ file: tasks.service.ts:21 ~ TasksService ~ user.character:',
-        user.character,
-      );
+
       const task = await this.tasks.save(
         this.tasks.create({
           character: user.character,
