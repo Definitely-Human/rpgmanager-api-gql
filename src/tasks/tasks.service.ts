@@ -91,7 +91,7 @@ export class TasksService {
   ): Promise<EditTaskOutput> {
     try {
       let task = await this.tasks.findOne({
-        where: { id: editTaskInput.id },
+        where: { id: editTaskInput.taskId },
         loadRelationIds: true,
       });
       if (!task || task.character.id !== user.character.id)

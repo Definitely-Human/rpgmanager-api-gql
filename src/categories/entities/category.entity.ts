@@ -21,6 +21,7 @@ export class Category extends CoreEntity {
   @Length(2, 50)
   name: string;
 
+  @Field((type) => Category, { nullable: true })
   @ManyToOne((type) => Category, (category) => category.childCategories)
   parentCategory?: Category;
 
