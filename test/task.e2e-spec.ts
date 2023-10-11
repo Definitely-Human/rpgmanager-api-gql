@@ -220,7 +220,7 @@ describe('Task e2e tests', () => {
 
       it('should fail to create task with other users category', async () => {
         const secondUser: CreateAccountInput = {
-          username: 'testuser2',
+          username: 'testUser2',
           email: 'test2@example.com',
           password: 'example123',
         };
