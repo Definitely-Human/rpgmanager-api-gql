@@ -5,7 +5,7 @@ import { Category } from '../entities/category.entity';
 @InputType()
 export class CreateCategoryInput extends PickType(Category, ['name']) {
   @Field((type) => Int, { nullable: true })
-  parentCategoryId: number;
+  parentCategoryId?: number;
 }
 
 @ObjectType()

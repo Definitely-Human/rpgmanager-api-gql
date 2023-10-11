@@ -22,7 +22,7 @@ export class TasksService {
     user: User,
   ): Promise<CreateTaskOutput> {
     try {
-      if (user.character === undefined)
+      if (user.character === null)
         return { ok: false, error: 'Character does not exist.' };
 
       let category = null;
