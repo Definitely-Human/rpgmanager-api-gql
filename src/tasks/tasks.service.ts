@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CategoriesService } from '../categories/categories.service';
 import { User } from '../users/entities/user.entity';
 import { CreateTaskInput, CreateTaskOutput } from './dtos/create-task.dto';
 import { DeleteTaskInput, DeleteTaskOutput } from './dtos/delete-task.dto';
@@ -13,6 +14,7 @@ import { Task } from './entities/task.entity';
 export class TasksService {
   constructor(
     @InjectRepository(Task) private readonly tasks: Repository<Task>,
+    private readonly categoriesService: CategoriesService,
   ) {}
 
   async createTask(
@@ -20,16 +22,30 @@ export class TasksService {
     user: User,
   ): Promise<CreateTaskOutput> {
     try {
-      if (user.character === undefined)
+      if (user.character === null)
         return { ok: false, error: 'Character does not exist.' };
-      console.log(
-        '🚀 ~ file: tasks.service.ts:21 ~ TasksService ~ user.character:',
-        user.character,
-      );
+
+      let category = null;
+      if (createTaskInput.categoryId) {
+        const categoryOutput = await this.categoriesService.getCategory(
+          {
+            categoryId: createTaskInput.categoryId,
+          },
+          user,
+        );
+        if (!categoryOutput.ok)
+          return {
+            ok: false,
+            error: 'Category not found.',
+          };
+        category = categoryOutput.category;
+      }
+
       const task = await this.tasks.save(
         this.tasks.create({
           character: user.character,
           ...createTaskInput,
+          ...(category && { category }),
         }),
       );
       return {
@@ -51,11 +67,14 @@ export class TasksService {
   ): Promise<GetTaskOutput> {
     try {
       const task = await this.tasks.findOne({
-        where: { id: getTaskInput.id },
-        loadRelationIds: true,
+        where: {
+          id: getTaskInput.taskId,
+          character: { id: user.character.id },
+        },
+        loadRelationIds: { relations: ['character'] },
+        relations: { category: true },
       });
-      if (!task || task.character.id !== user.character.id)
-        return { ok: false, error: 'Task not found' };
+      if (!task) return { ok: false, error: 'Task not found.' };
       return {
         ok: true,
         task,
@@ -72,9 +91,10 @@ export class TasksService {
   async getTasks(user: User): Promise<GetTasksOutput> {
     try {
       const tasks = await this.tasks.find({
-        where: { id: user.character.id },
-        loadRelationIds: true,
+        where: { character: { id: user.character.id } },
+        relations: { category: true },
       });
+
       return {
         ok: true,
         tasks,
@@ -94,7 +114,7 @@ export class TasksService {
   ): Promise<EditTaskOutput> {
     try {
       let task = await this.tasks.findOne({
-        where: { id: editTaskInput.id },
+        where: { id: editTaskInput.taskId },
         loadRelationIds: true,
       });
       if (!task || task.character.id !== user.character.id)

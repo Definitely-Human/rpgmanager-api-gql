@@ -88,7 +88,7 @@ export class CharacterService {
 
       character = { ...character, ...editCharacterInput };
 
-      await this.characters.save(character);
+      character = await this.characters.save(character);
 
       return {
         ok: true,

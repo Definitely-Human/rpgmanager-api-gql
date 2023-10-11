@@ -12,6 +12,7 @@ import { MailModule } from './mail/mail.module';
 import { ProfilesModule } from './profiles/profiles.module';
 import { UsersModule } from './users/users.module';
 import { TasksModule } from './tasks/tasks.module';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -62,6 +63,7 @@ import { TasksModule } from './tasks/tasks.module';
     }),
     CharacterModule,
     TasksModule,
+    CategoriesModule,
   ],
   controllers: [],
   providers: [],

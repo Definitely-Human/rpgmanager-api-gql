@@ -2,7 +2,15 @@ import { InternalServerErrorException } from '@nestjs/common';
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import * as bcrypt from 'bcrypt';
 import { IsBoolean, IsDate, IsEmail, IsString, Length } from 'class-validator';
-import { BeforeInsert, BeforeUpdate, Column, Entity, OneToOne } from 'typeorm';
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
+import { Category } from '../../categories/entities/category.entity';
 import { Character } from '../../character/entities/character.entity';
 import { CoreEntity } from '../../common/entities/core.entity';
 import { Profile } from '../../profiles/entities/profile.entity';
@@ -57,11 +65,15 @@ export class User extends CoreEntity {
   })
   profile: Profile;
 
-  @Field((type) => Character)
+  @Field((type) => Character, { nullable: true })
   @OneToOne((type) => Character, (character) => character.user, {
-    onDelete: 'RESTRICT',
+    onDelete: 'SET NULL',
   })
-  character: Character;
+  character?: Character;
+
+  @Field((type) => [Category])
+  @OneToMany((type) => Category, (category) => category.user)
+  categories: Category[];
 
   @BeforeInsert()
   @BeforeUpdate()

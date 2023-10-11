@@ -6,7 +6,8 @@ import {
   Length,
   MaxLength,
 } from 'class-validator';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, RelationId } from 'typeorm';
+import { Category } from '../../categories/entities/category.entity';
 import { Character } from '../../character/entities/character.entity';
 import { CoreEntity } from '../../common/entities/core.entity';
 
@@ -22,6 +23,9 @@ export class Task extends CoreEntity {
     nullable: false,
   })
   character: Character;
+
+  @RelationId((task: Task) => task.character)
+  characterId: number;
 
   @Field((type) => String)
   @Column({ nullable: false })
@@ -59,4 +63,14 @@ export class Task extends CoreEntity {
   @Column({ nullable: false, default: false })
   @IsBoolean()
   is_favorite: boolean;
+
+  @Field((type) => Category, { nullable: true })
+  @ManyToOne((type) => Category, (category) => category.tasks, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
+  category?: Category;
+
+  @RelationId((task: Task) => task.category)
+  categoryId?: number;
 }
