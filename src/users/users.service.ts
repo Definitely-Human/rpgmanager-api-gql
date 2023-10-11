@@ -30,7 +30,7 @@ export class UsersService {
     try {
       const user = await this.users.findOne({
         where: { id: userId },
-        loadRelationIds: true,
+        relations: { character: true },
       });
       if (!user) {
         return null;

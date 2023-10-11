@@ -1,4 +1,4 @@
-import { Field, InputType, ObjectType, PickType } from '@nestjs/graphql';
+import { Field, InputType, Int, ObjectType, PickType } from '@nestjs/graphql';
 import { CoreOutput } from '../../common/dtos/output.dto';
 import { Task } from '../entities/task.entity';
 
@@ -8,7 +8,10 @@ export class CreateTaskInput extends PickType(Task, [
   'title',
   'due_to',
   'is_favorite',
-]) {}
+]) {
+  @Field((type) => Int, { nullable: true })
+  categoryId?: number;
+}
 
 @ObjectType()
 export class CreateTaskOutput extends CoreOutput {
