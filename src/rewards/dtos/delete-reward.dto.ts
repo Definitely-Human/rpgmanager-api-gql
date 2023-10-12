@@ -1,4 +1,5 @@
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
+import { CoreOutput } from '../../common/dtos/output.dto';
 
 @InputType()
 export class DeleteRewardInput {
@@ -7,4 +8,4 @@ export class DeleteRewardInput {
 }
 
 @ObjectType()
-export class DeleteRewardOutput {}
+export class DeleteRewardOutput extends CoreOutput {}

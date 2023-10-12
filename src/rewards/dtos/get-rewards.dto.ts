@@ -9,9 +9,9 @@ import { CoreOutput } from '../../common/dtos/output.dto';
 import { Reward } from '../entities/reward.entity';
 
 @InputType()
-export class GetRewardsInput extends PartialType(
-  PickType(Reward, ['isReceived']),
-) {}
+export class GetRewardsInput extends PickType(PartialType(Reward), [
+  'isReceived',
+]) {}
 
 @ObjectType()
 export class GetRewardsOutput extends CoreOutput {

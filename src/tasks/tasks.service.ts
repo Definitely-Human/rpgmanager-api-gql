@@ -109,6 +109,7 @@ export class TasksService {
   }
 
   async editTask(
+    // TODO: Fix editing category on task
     editTaskInput: EditTaskInput,
     user: User,
   ): Promise<EditTaskOutput> {
