@@ -8,21 +8,21 @@ import { CoreEntity } from '../../common/entities/core.entity';
 @Entity()
 export class Reward extends CoreEntity {
   @Field((type) => Int)
-  @Column({ default: 0 })
+  @Column({ default: 0, nullable: false })
   @IsInt()
   @Max(10000)
   @Min(0)
   coins: number;
 
   @Field((type) => Int)
-  @Column({ default: 0 })
+  @Column({ default: 0, nullable: false })
   @IsInt()
   @Max(10000)
   @Min(0)
   experience: number;
 
   @Field((type) => Int)
-  @Column({ default: false })
+  @Column({ default: false, nullable: false })
   @IsBoolean()
   isReceived: boolean;
 }
