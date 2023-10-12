@@ -267,8 +267,7 @@ describe('Task e2e tests', () => {
       it('should get task', async () => {
         const tasksService: TasksService =
           moduleFixture.get<TasksService>(TasksService);
-        const ans = await tasksService.createTask(testTask, thisTestUser);
-        console.log(ans);
+        await tasksService.createTask(testTask, thisTestUser);
         return request(app.getHttpServer())
           .post(gql)
           .set('x-jwt', token)
