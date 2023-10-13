@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Character } from '../character/entities/character.entity';
 import { Task } from '../tasks/entities/task.entity';
 import { User } from '../users/entities/user.entity';
 import {
@@ -21,6 +22,8 @@ export class RewardsService {
   constructor(
     @InjectRepository(Reward) private readonly rewards: Repository<Reward>,
     @InjectRepository(Task) private readonly tasks: Repository<Task>,
+    @InjectRepository(Character)
+    private readonly characters: Repository<Character>,
   ) {}
 
   async createReward(
@@ -159,8 +162,28 @@ export class RewardsService {
     }
   }
 
-  async checkRewardCompletion(rewardId: number) {
-    const reward = await this.rewards.findOne({ where: { id: rewardId } });
-    // const tasks = this.tasks.find({where:{}})
+  async checkIfRewardShouldBeReceived(rewardId: number) {
+    const reward = await this.rewards.findOne({
+      where: { id: rewardId },
+      relations: { character: true },
+    });
+    const tasks = await this.tasks.find({
+      where: { reward: { id: rewardId }, is_complete: false },
+    });
+    if (tasks.length === 0 && reward.isReceived === false) {
+      reward.character.coins += reward.coins;
+      reward.character.experience += reward.experience;
+      this.characters.save(reward.character);
+      reward.isReceived = true;
+      this.rewards.save(reward);
+    }
+  }
+
+  async checkIfRewardReceived(rewardId: number): Promise<boolean> {
+    const reward = await this.rewards.findOne({
+      select: { isReceived: true },
+      where: { id: rewardId },
+    });
+    return reward.isReceived;
   }
 }

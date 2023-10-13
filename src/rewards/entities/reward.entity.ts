@@ -1,6 +1,6 @@
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
 import { IsBoolean, IsInt, Max, Min } from 'class-validator';
-import { Column, Entity, ManyToOne, RelationId } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, RelationId } from 'typeorm';
 import { Character } from '../../character/entities/character.entity';
 import { CoreEntity } from '../../common/entities/core.entity';
 import { Task } from '../../tasks/entities/task.entity';
@@ -9,13 +9,13 @@ import { Task } from '../../tasks/entities/task.entity';
 @ObjectType()
 @Entity()
 export class Reward extends CoreEntity {
-  @ManyToOne((type) => Character, (character) => character.tasks, {
+  @ManyToOne((type) => Character, (character) => character.rewards, {
     onDelete: 'CASCADE',
     nullable: false,
   })
   character: Character;
 
-  @RelationId((task: Task) => task.character)
+  @RelationId((reward: Reward) => reward.character)
   characterId: number;
 
   @Field((type) => Int)
@@ -36,4 +36,8 @@ export class Reward extends CoreEntity {
   @Column({ default: false, nullable: false })
   @IsBoolean()
   isReceived: boolean;
+
+  @Field((type) => [Task])
+  @OneToMany((type) => Task, (task) => task.reward)
+  tasks: Task[];
 }
