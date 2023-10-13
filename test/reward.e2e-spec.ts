@@ -84,6 +84,86 @@ describe('Task e2e tests', () => {
         .then((val) => (thisTestUser.character = val.character));
     });
 
+    it('should create reward', () => {
+      return request(app.getHttpServer())
+        .post(gql)
+        .set('x-jwt', token)
+        .send({
+          query: `
+          mutation {
+            createReward(
+              input: {
+                coins: ${testRewardInput.coins}
+                experience: ${testRewardInput.experience}
+              }
+            ){
+              ok
+              error
+              reward{
+                id
+                coins
+                experience
+              }
+            }
+          }
+          `,
+        })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.data.createReward).toMatchObject({
+            ok: true,
+            error: null,
+            reward: {
+              id: 1,
+              coins: testRewardInput.coins,
+              experience: testRewardInput.experience,
+            },
+          });
+        });
+    });
+
+    it('should edit reward', async () => {
+      const rewardsService: RewardsService =
+        moduleFixture.get<RewardsService>(RewardsService);
+      await rewardsService.createReward(testRewardInput, thisTestUser);
+      return request(app.getHttpServer())
+        .post(gql)
+        .set('x-jwt', token)
+        .send({
+          query: `
+          mutation {
+            editReward(
+              input: {
+                rewardId: 1
+                coins: ${testRewardInput.coins * 2}
+                experience: ${testRewardInput.experience * 2}
+              }
+            ){
+              ok
+              error
+              reward{
+                id
+                coins
+                experience
+              }
+            }
+          }
+          `,
+        })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.data.editReward).toMatchObject({
+            ok: true,
+            error: null,
+            reward: {
+              id: 1,
+              coins: testRewardInput.coins * 2,
+              experience: testRewardInput.experience * 2,
+            },
+          });
+        });
+    });
+
     it('should receive reward and mark it as complete when all associated tasks are complete. ', async () => {
       const rewardsService: RewardsService =
         moduleFixture.get<RewardsService>(RewardsService);
