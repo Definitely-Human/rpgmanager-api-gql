@@ -2,6 +2,7 @@ import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
 import { IsString, Length } from 'class-validator';
 import { Column, Entity, ManyToOne, OneToMany, RelationId } from 'typeorm';
 import { CoreEntity } from '../../common/entities/core.entity';
+import { List } from '../../lists/entities/list.entity';
 import { Task } from '../../tasks/entities/task.entity';
 import { User } from '../../users/entities/user.entity';
 
@@ -36,4 +37,8 @@ export class Category extends CoreEntity {
   @Field((type) => [Task])
   @OneToMany((type) => Task, (task) => task.category)
   tasks?: Task[];
+
+  @Field((type) => [List])
+  @OneToMany((type) => List, (list) => list.category)
+  lists?: List[];
 }

@@ -14,6 +14,7 @@ import { UsersModule } from './users/users.module';
 import { TasksModule } from './tasks/tasks.module';
 import { CategoriesModule } from './categories/categories.module';
 import { RewardsModule } from './rewards/rewards.module';
+import { ListsModule } from './lists/lists.module';
 
 @Module({
   imports: [
@@ -66,6 +67,7 @@ import { RewardsModule } from './rewards/rewards.module';
     TasksModule,
     CategoriesModule,
     RewardsModule,
+    ListsModule,
   ],
   controllers: [],
   providers: [],
