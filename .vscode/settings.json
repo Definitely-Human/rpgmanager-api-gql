@@ -1,4 +1,7 @@
 {
   "cSpell.words": ["dtos", "nestjs", "typeorm"],
-  "editor.indentSize": 2
+  "editor.indentSize": 2,
+  "[typescript]": {
+    "editor.tabSize": 2
+  }
 }

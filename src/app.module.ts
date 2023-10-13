@@ -13,6 +13,7 @@ import { ProfilesModule } from './profiles/profiles.module';
 import { UsersModule } from './users/users.module';
 import { TasksModule } from './tasks/tasks.module';
 import { CategoriesModule } from './categories/categories.module';
+import { RewardsModule } from './rewards/rewards.module';
 
 @Module({
   imports: [
@@ -64,6 +65,7 @@ import { CategoriesModule } from './categories/categories.module';
     CharacterModule,
     TasksModule,
     CategoriesModule,
+    RewardsModule,
   ],
   controllers: [],
   providers: [],

@@ -24,6 +24,8 @@ export class EditTaskInput extends PartialType(
   taskId: number;
   @Field((type) => Int, { nullable: true })
   categoryId?: number;
+  @Field((type) => Int, { nullable: true })
+  rewardId?: number;
 }
 
 @ObjectType()

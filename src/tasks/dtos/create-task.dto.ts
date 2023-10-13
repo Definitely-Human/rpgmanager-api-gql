@@ -11,6 +11,8 @@ export class CreateTaskInput extends PickType(Task, [
 ]) {
   @Field((type) => Int, { nullable: true })
   categoryId?: number;
+  @Field((type) => Int, { nullable: true })
+  rewardId?: number;
 }
 
 @ObjectType()

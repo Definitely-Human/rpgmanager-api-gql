@@ -10,6 +10,7 @@ import { Column, Entity, ManyToOne, RelationId } from 'typeorm';
 import { Category } from '../../categories/entities/category.entity';
 import { Character } from '../../character/entities/character.entity';
 import { CoreEntity } from '../../common/entities/core.entity';
+import { Reward } from '../../rewards/entities/reward.entity';
 
 /**
  * Class that describes user defined tasks.
@@ -73,4 +74,14 @@ export class Task extends CoreEntity {
 
   @RelationId((task: Task) => task.category)
   categoryId?: number;
+
+  @Field((type) => Reward, { nullable: true })
+  @ManyToOne((type) => Reward, (reward) => reward.tasks, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
+  reward?: Reward;
+
+  @RelationId((task: Task) => task.reward)
+  rewardId?: number;
 }

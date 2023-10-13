@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CategoriesService } from '../categories/categories.service';
+import { RewardsService } from '../rewards/rewards.service';
 import { Task } from './entities/task.entity';
 import { TasksService } from './tasks.service';
 
@@ -15,6 +16,11 @@ const mockCategoryService = () => ({
   getCategory: jest.fn(),
 });
 
+const mockRewardsService = () => ({
+  getReward: jest.fn(),
+  checkIfRewardShouldBeReceived: jest.fn(),
+});
+
 describe('TasksService', () => {
   let service: TasksService;
 
@@ -24,6 +30,7 @@ describe('TasksService', () => {
         TasksService,
         { provide: getRepositoryToken(Task), useValue: mockRepository },
         { provide: CategoriesService, useValue: mockCategoryService },
+        { provide: RewardsService, useValue: mockRewardsService },
       ],
     }).compile();
 
