@@ -178,7 +178,7 @@ export class TasksService {
       task = {
         ...task,
         ...editTaskInput,
-        // If category is found or category should be set to null update category | reward
+        // If category is found or category should be set to null, update category | reward
         ...((category || editTaskInput.categoryId === null) && { category }),
         ...((reward || editTaskInput.rewardId === null) && { reward }),
       };
@@ -186,7 +186,7 @@ export class TasksService {
       task = await this.tasks.save(task);
 
       if (editTaskInput.is_complete === true && task.rewardId != null) {
-        this.rewardsService.checkIfRewardShouldBeReceived(task.rewardId);
+        await this.rewardsService.checkIfRewardShouldBeReceived(task.rewardId);
       }
 
       return {

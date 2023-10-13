@@ -61,7 +61,7 @@ export class CharacterService {
   ): Promise<GetCharacterOutput> {
     try {
       const character = await this.characters.findOne({
-        where: { id: getCharacterInput.id },
+        where: { id: getCharacterInput.characterId },
       });
 
       if (!character) return { ok: false, error: 'Character not found' };

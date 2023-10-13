@@ -7,6 +7,8 @@ import { AuthService } from '../src/auth/auth.service';
 import { CategoriesService } from '../src/categories/categories.service';
 import { CharacterService } from '../src/character/character.service';
 import { CreateCharacterInput } from '../src/character/dtos/create-character.dto';
+import { CreateRewardInput } from '../src/rewards/dtos/create-reward.dto';
+import { RewardsService } from '../src/rewards/rewards.service';
 import { CreateTaskInput } from '../src/tasks/dtos/create-task.dto';
 import { TasksService } from '../src/tasks/tasks.service';
 import { CreateAccountInput } from '../src/users/dtos/create-account.dto';
@@ -20,13 +22,13 @@ describe('Task e2e tests', () => {
 
   const gql = '/graphql';
 
-  const testUser: CreateAccountInput = {
+  const testUserInput: CreateAccountInput = {
     email: 'test@example.com',
     username: 'testUser',
     password: 'test1234',
   };
 
-  const testTask: CreateTaskInput = {
+  const testTaskInput: CreateTaskInput = {
     content: 'Live until tomorrow',
     title: 'Live',
     due_to: new Date('2023-10-07T14:56:17.000Z'),
@@ -57,11 +59,11 @@ describe('Task e2e tests', () => {
     beforeEach(async () => {
       usersService = moduleFixture.get<UsersService>(UsersService);
       const authService = moduleFixture.get<AuthService>(AuthService);
-      await usersService.createAccount(testUser);
+      await usersService.createAccount(testUserInput);
       await authService
         .login({
-          usernameOrEmail: testUser.email,
-          password: testUser.password,
+          usernameOrEmail: testUserInput.email,
+          password: testUserInput.password,
         })
         .then((val) => {
           token = val.token;
@@ -78,10 +80,10 @@ describe('Task e2e tests', () => {
           mutation {
             createTask(
               input: {
-                content: "${testTask.title}"
-                title: "${testTask.content}"
-                due_to: "${testTask.due_to}"
-                is_favorite: ${testTask.is_favorite}
+                content: "${testTaskInput.title}"
+                title: "${testTaskInput.content}"
+                due_to: "${testTaskInput.due_to}"
+                is_favorite: ${testTaskInput.is_favorite}
               }
             ){
               ok
@@ -137,10 +139,10 @@ describe('Task e2e tests', () => {
             mutation {
               createTask(
                 input: {
-                  content: "${testTask.content}"
-                  title: "${testTask.title}"
-                  due_to: "${testTask.due_to}"
-                  is_favorite: ${testTask.is_favorite}
+                  content: "${testTaskInput.content}"
+                  title: "${testTaskInput.title}"
+                  due_to: "${testTaskInput.due_to}"
+                  is_favorite: ${testTaskInput.is_favorite}
                 }
               ){
                 ok
@@ -170,17 +172,17 @@ describe('Task e2e tests', () => {
               error: null,
               task: {
                 id: 1,
-                content: testTask.content,
-                title: testTask.title,
+                content: testTaskInput.content,
+                title: testTaskInput.title,
                 completion_time: null,
                 is_deleted: false,
                 is_complete: false,
-                is_favorite: testTask.is_favorite,
+                is_favorite: testTaskInput.is_favorite,
                 category: null,
               },
             });
             expect(new Date(res.body.data.createTask.task.due_to)).toEqual(
-              testTask.due_to,
+              testTaskInput.due_to,
             );
           });
       });
@@ -194,10 +196,10 @@ describe('Task e2e tests', () => {
             mutation {
               createTask(
                 input: {
-                  content: "${testTask.content}"
-                  title: "${testTask.title}"
-                  due_to: "${testTask.due_to}"
-                  is_favorite: ${testTask.is_favorite}
+                  content: "${testTaskInput.content}"
+                  title: "${testTaskInput.title}"
+                  due_to: "${testTaskInput.due_to}"
+                  is_favorite: ${testTaskInput.is_favorite}
                   categoryId: 1
                 }
               ){
@@ -240,10 +242,10 @@ describe('Task e2e tests', () => {
             mutation {
               createTask(
                 input: {
-                  content: "${testTask.content}"
-                  title: "${testTask.title}"
-                  due_to: "${testTask.due_to}"
-                  is_favorite: ${testTask.is_favorite}
+                  content: "${testTaskInput.content}"
+                  title: "${testTaskInput.title}"
+                  due_to: "${testTaskInput.due_to}"
+                  is_favorite: ${testTaskInput.is_favorite}
                   categoryId: 1
                 }
               ){
@@ -264,10 +266,104 @@ describe('Task e2e tests', () => {
           });
       });
 
+      it('should create task with category', async () => {
+        const categoryService: CategoriesService =
+          moduleFixture.get<CategoriesService>(CategoriesService);
+        const testCategory = { name: 'testCategory' };
+        await categoryService.createCategory(testCategory, thisTestUser);
+        return request(app.getHttpServer())
+          .post(gql)
+          .set('x-jwt', token)
+          .send({
+            query: `
+            mutation {
+              createTask(
+                input: {
+                  content: "${testTaskInput.content}"
+                  title: "${testTaskInput.title}"
+                  due_to: "${testTaskInput.due_to}"
+                  is_favorite: ${testTaskInput.is_favorite}
+                  categoryId: 1
+                }
+              ){
+                ok
+                error
+                task {
+                    id
+                    category{
+                      id
+                      name
+                    }
+                }
+              }
+            }
+            `,
+          })
+          .expect(200)
+          .expect((res) => {
+            expect(res.body.data.createTask).toEqual({
+              ok: true,
+              error: null,
+              task: { id: 1, category: { id: 1, name: testCategory.name } },
+            });
+          });
+      });
+
+      it('should create task with reward', async () => {
+        const rewardsService: RewardsService =
+          moduleFixture.get<RewardsService>(RewardsService);
+        const testReward: CreateRewardInput = { experience: 15, coins: 25 };
+        await rewardsService.createReward(testReward, thisTestUser);
+        return request(app.getHttpServer())
+          .post(gql)
+          .set('x-jwt', token)
+          .send({
+            query: `
+            mutation {
+              createTask(
+                input: {
+                  content: "${testTaskInput.content}"
+                  title: "${testTaskInput.title}"
+                  due_to: "${testTaskInput.due_to}"
+                  is_favorite: ${testTaskInput.is_favorite}
+                  rewardId: 1
+                }
+              ){
+                ok
+                error
+                task {
+                    id
+                    reward{
+                      id
+                      coins
+                      experience
+                    }
+                }
+              }
+            }
+            `,
+          })
+          .expect(200)
+          .expect((res) => {
+            expect(res.body.data.createTask).toEqual({
+              ok: true,
+              error: null,
+              task: {
+                id: 1,
+                reward: {
+                  id: 1,
+                  coins: testReward.coins,
+                  experience: testReward.experience,
+                },
+              },
+            });
+          });
+      });
+
       it('should get task', async () => {
         const tasksService: TasksService =
           moduleFixture.get<TasksService>(TasksService);
-        await tasksService.createTask(testTask, thisTestUser);
+        await tasksService.createTask(testTaskInput, thisTestUser);
         return request(app.getHttpServer())
           .post(gql)
           .set('x-jwt', token)
@@ -301,12 +397,12 @@ describe('Task e2e tests', () => {
               error: null,
               task: {
                 id: 1,
-                content: testTask.content,
-                title: testTask.title,
+                content: testTaskInput.content,
+                title: testTaskInput.title,
                 completion_time: null,
                 is_deleted: false,
                 is_complete: false,
-                is_favorite: testTask.is_favorite,
+                is_favorite: testTaskInput.is_favorite,
                 category: null,
               },
             });

@@ -173,9 +173,9 @@ export class RewardsService {
     if (tasks.length === 0 && reward.isReceived === false) {
       reward.character.coins += reward.coins;
       reward.character.experience += reward.experience;
-      this.characters.save(reward.character);
+      await this.characters.save(reward.character);
       reward.isReceived = true;
-      this.rewards.save(reward);
+      await this.rewards.save(reward);
     }
   }
 

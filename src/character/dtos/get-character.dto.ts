@@ -1,9 +1,12 @@
-import { Field, InputType, ObjectType, PickType } from '@nestjs/graphql';
+import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
 import { CoreOutput } from '../../common/dtos/output.dto';
 import { Character } from '../entities/character.entity';
 
 @InputType()
-export class GetCharacterInput extends PickType(Character, ['id']) {}
+export class GetCharacterInput {
+  @Field((type) => Int)
+  characterId: number;
+}
 
 @ObjectType()
 export class GetCharacterOutput extends CoreOutput {
