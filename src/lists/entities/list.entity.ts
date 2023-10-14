@@ -1,9 +1,10 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { IsBoolean, IsString, Length, MaxLength } from 'class-validator';
-import { Column, Entity, ManyToOne, RelationId } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, RelationId } from 'typeorm';
 import { Category } from '../../categories/entities/category.entity';
 import { Character } from '../../character/entities/character.entity';
 import { CoreEntity } from '../../common/entities/core.entity';
+import { ListItem } from './list-item.entity';
 
 @InputType('ListInputType', { isAbstract: true })
 @ObjectType()
@@ -49,4 +50,8 @@ export class List extends CoreEntity {
 
   @RelationId((list: List) => list.category)
   categoryId?: number;
+
+  @Field((type) => [ListItem])
+  @OneToMany((type) => ListItem, (listItem) => listItem.list)
+  listItems?: ListItem[];
 }

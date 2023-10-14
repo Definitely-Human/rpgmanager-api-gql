@@ -1,6 +1,7 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { Category } from '../categories/entities/category.entity';
 import { Character } from '../character/entities/character.entity';
+import { ListItem } from '../lists/entities/list-item.entity';
 import { List } from '../lists/entities/list.entity';
 import { Profile } from '../profiles/entities/profile.entity';
 import { Reward } from '../rewards/entities/reward.entity';
@@ -35,6 +36,7 @@ export const DatabaseConfig = (): TypeOrmModuleOptions => ({
     Category,
     Reward,
     List,
+    ListItem,
   ],
   host: process.env.DB_HOST,
   port: +process.env.DB_PORT,
