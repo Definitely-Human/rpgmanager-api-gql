@@ -1,9 +1,11 @@
-import { InputType, ObjectType, PickType } from '@nestjs/graphql';
+import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
 import { CoreOutput } from '../../common/dtos/output.dto';
-import { Task } from '../entities/task.entity';
 
 @InputType()
-export class DeleteTaskInput extends PickType(Task, ['id']) {}
+export class DeleteTaskInput {
+  @Field((type) => Int)
+  taskId: number;
+}
 
 @ObjectType()
 export class DeleteTaskOutput extends CoreOutput {}

@@ -8,4 +8,4 @@ export class DeleteListInput {
 }
 
 @ObjectType()
-export class GetListOutput extends CoreOutput {}
+export class DeleteListOutput extends CoreOutput {}

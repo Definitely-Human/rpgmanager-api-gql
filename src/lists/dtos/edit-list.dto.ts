@@ -17,6 +17,8 @@ export class EditListInput extends PickType(PartialType(List), [
 ]) {
   @Field((type) => Int)
   listId: number;
+  @Field((type) => Int, { nullable: true })
+  categoryId?: number;
 }
 
 @ObjectType()
