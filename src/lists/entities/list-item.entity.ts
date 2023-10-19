@@ -11,12 +11,11 @@ export class ListItem extends CoreEntity {
   @Field((type) => List, { nullable: true })
   @ManyToOne((type) => List, (list) => list.listItems, {
     onDelete: 'CASCADE',
-    nullable: true,
   })
-  list?: List;
+  list: List;
 
   @RelationId((listItem: ListItem) => listItem.list)
-  listId?: number;
+  listId: number;
 
   @Field((type) => String)
   @Column({ nullable: false })

@@ -51,7 +51,7 @@ export class List extends CoreEntity {
   @RelationId((list: List) => list.category)
   categoryId?: number;
 
-  @Field((type) => [ListItem])
+  @Field((type) => [ListItem], { nullable: true })
   @OneToMany((type) => ListItem, (listItem) => listItem.list)
   listItems?: ListItem[];
 }
