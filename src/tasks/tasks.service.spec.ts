@@ -12,7 +12,7 @@ const mockRepository = {
   delete: jest.fn(),
 };
 
-const mockCategoryService = () => ({
+const mockCategoriesService = () => ({
   getCategory: jest.fn(),
 });
 
@@ -29,8 +29,8 @@ describe('TasksService', () => {
       providers: [
         TasksService,
         { provide: getRepositoryToken(Task), useValue: mockRepository },
-        { provide: CategoriesService, useValue: mockCategoryService },
-        { provide: RewardsService, useValue: mockRewardsService },
+        { provide: CategoriesService, useValue: mockCategoriesService() },
+        { provide: RewardsService, useValue: mockRewardsService() },
       ],
     }).compile();
 

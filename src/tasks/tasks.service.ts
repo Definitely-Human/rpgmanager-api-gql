@@ -208,7 +208,7 @@ export class TasksService {
   ): Promise<DeleteTaskOutput> {
     try {
       const task = await this.tasks.findOne({
-        where: { id: deleteTaskInput.id },
+        where: { id: deleteTaskInput.taskId },
         loadRelationIds: true,
       });
       if (!task || task.character.id !== user.character.id)
