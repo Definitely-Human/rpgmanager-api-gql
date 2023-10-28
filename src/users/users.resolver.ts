@@ -1,21 +1,25 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
-import { User } from './entities/user.entity';
-import { Query } from '@nestjs/graphql';
-import { GetUserInput, GetUserOutput } from './dtos/get-user.dto';
-import { UsersService } from './users.service';
+import { Args, Mutation, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { AuthUser } from '../auth/authUser.decorator';
+import { Authorize } from '../auth/authorize.decorator';
+import { Profile } from '../profiles/entities/profile.entity.js';
+import { ProfilesService } from '../profiles/profiles.service.js';
 import {
   CreateAccountInput,
   CreateAccountOutput,
 } from './dtos/create-account.dto';
 import { EditUserInput, EditUserOutput } from './dtos/edit-user.dto';
-import { VerifyEmailInput, VerifyEmailOutput } from './dtos/verify-email.dto';
+import { GetUserInput, GetUserOutput } from './dtos/get-user.dto';
 import { MeOutput } from './dtos/me.dto';
-import { Authorize } from '../auth/authorize.decorator';
-import { AuthUser } from '../auth/authUser.decorator';
+import { VerifyEmailInput, VerifyEmailOutput } from './dtos/verify-email.dto';
+import { User } from './entities/user.entity';
+import { UsersService } from './users.service';
 
 @Resolver((of) => User)
 export class UserResolver {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly profilesService: ProfilesService,
+  ) {}
 
   @Authorize(['Any'])
   @Mutation((returns) => CreateAccountOutput)
@@ -49,5 +53,15 @@ export class UserResolver {
     @Args('input') verifyEmailInput: VerifyEmailInput,
   ): Promise<VerifyEmailOutput> {
     return await this.usersService.verifyEmail(verifyEmailInput.code);
+  }
+
+  @ResolveField((returns) => Profile)
+  async profile(@AuthUser() authUser: User) {
+    console.log('profile');
+    return (
+      await this.profilesService.getProfileById({
+        profileId: authUser.profileId,
+      })
+    ).profile;
   }
 }

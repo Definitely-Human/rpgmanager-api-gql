@@ -9,6 +9,7 @@ import {
   Entity,
   OneToMany,
   OneToOne,
+  RelationId,
 } from 'typeorm';
 import { Category } from '../../categories/entities/category.entity';
 import { Character } from '../../character/entities/character.entity';
@@ -64,6 +65,9 @@ export class User extends CoreEntity {
     onDelete: 'RESTRICT',
   })
   profile: Profile;
+
+  @RelationId((user: User) => user.profile)
+  profileId: number;
 
   @Field((type) => Character, { nullable: true })
   @OneToOne((type) => Character, (character) => character.user, {
