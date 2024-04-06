@@ -5,15 +5,16 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as Joi from 'joi';
 import { AuthModule } from './auth/auth.module';
+import { CategoriesModule } from './categories/categories.module';
 import { CharacterModule } from './character/character.module';
 import { CommonModule } from './common/common.module';
 import { DatabaseConfig } from './config/config.database';
+import { ListsModule } from './lists/lists.module';
 import { MailModule } from './mail/mail.module';
 import { ProfilesModule } from './profiles/profiles.module';
-import { UsersModule } from './users/users.module';
-import { TasksModule } from './tasks/tasks.module';
-import { CategoriesModule } from './categories/categories.module';
 import { RewardsModule } from './rewards/rewards.module';
+import { TasksModule } from './tasks/tasks.module';
+import { UsersModule } from './users/users.module';
 import { ListsModule } from './lists/lists.module';
 
 @Module({

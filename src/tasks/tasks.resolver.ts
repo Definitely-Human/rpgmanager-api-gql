@@ -5,7 +5,7 @@ import { CreateTaskInput, CreateTaskOutput } from './dtos/create-task.dto';
 import { DeleteTaskInput, DeleteTaskOutput } from './dtos/delete-task.dto';
 import { EditTaskInput, EditTaskOutput } from './dtos/edit-task.dto';
 import { GetTaskInput, GetTaskOutput } from './dtos/get-task.dto';
-import { GetTasksOutput } from './dtos/get-tasks.dto';
+import { GetTasksInput, GetTasksOutput } from './dtos/get-tasks.dto';
 import { Task } from './entities/task.entity';
 import { TasksService } from './tasks.service';
 
@@ -30,8 +30,11 @@ export class TasksResolver {
   }
 
   @Query((returns) => GetTasksOutput)
-  async getTasks(@AuthUser() authUser: User): Promise<GetTasksOutput> {
-    return this.tasksService.getTasks(authUser);
+  async getTasks(
+    @Args('input', { nullable: true }) getTasksInput: GetTasksInput,
+    @AuthUser() authUser: User,
+  ): Promise<GetTasksOutput> {
+    return this.tasksService.getTasks(getTasksInput, authUser);
   }
 
   @Mutation((returns) => EditTaskOutput)

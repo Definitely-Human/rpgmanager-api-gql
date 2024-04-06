@@ -8,7 +8,7 @@ import { CreateTaskInput, CreateTaskOutput } from './dtos/create-task.dto';
 import { DeleteTaskInput, DeleteTaskOutput } from './dtos/delete-task.dto';
 import { EditTaskInput, EditTaskOutput } from './dtos/edit-task.dto';
 import { GetTaskInput, GetTaskOutput } from './dtos/get-task.dto';
-import { GetTasksOutput } from './dtos/get-tasks.dto';
+import { GetTasksInput, GetTasksOutput } from './dtos/get-tasks.dto';
 import { Task } from './entities/task.entity';
 
 @Injectable()
@@ -108,10 +108,18 @@ export class TasksService {
     }
   }
 
-  async getTasks(user: User): Promise<GetTasksOutput> {
+  async getTasks(
+    getTasksInput: GetTasksInput,
+    user: User,
+  ): Promise<GetTasksOutput> {
     try {
       const tasks = await this.tasks.find({
-        where: { character: { id: user.character.id } },
+        where: {
+          character: { id: user.character.id },
+          ...(getTasksInput?.categoryId && {
+            category: { id: getTasksInput?.categoryId },
+          }), // If categoryId provided filter by category
+        },
         relations: { category: true, reward: true },
       });
 
