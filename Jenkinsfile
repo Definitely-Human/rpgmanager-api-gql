@@ -1,15 +1,14 @@
 pipeline {
   agent {
     docker {
-      image 'node:16-alpine'
+      image '18.18-alpine3.18'
       args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
     }
   }
   stages {
-    stage('Checkout') {
+    stage('Install docker') {
       steps {
-        sh "echo 'already checkedout because Jenkinsfile is in repo'"
-        //git branch: 'main', credentialsId: 'github-cred', url: 'https://github.com/Definitely-Human/rpgmanager-api-gql.git'
+        sh "apk update && apk add docker"
       }
     }
     stage('Install Dependencies') {
