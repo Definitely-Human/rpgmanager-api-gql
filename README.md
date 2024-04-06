@@ -6,11 +6,14 @@ This is the rewrite of <a href="https://github.com/Definitely-Human/rpgmanager-a
 
 ## Table of Contents
 
-- [The Goal](#the-goal)
-- [Technical Details](#technical-details)
-- [Installation](#installation)
-- [Known Issues](#known-issues)
-- [Contributing](#contributing)
+- [NestJS GraphQL RpgManager API Project](#nestjs-graphql-rpgmanager-api-project)
+  - [Table of Contents](#table-of-contents)
+  - [The Goal](#the-goal)
+  - [Technical Details](#technical-details)
+    - [GraphQL Playground](#graphql-playground)
+  - [Installation](#installation)
+  - [Known Issues](#known-issues)
+  - [Contributing](#contributing)
 
 ## The Goal
 
