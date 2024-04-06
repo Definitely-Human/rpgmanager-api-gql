@@ -15,6 +15,7 @@ import { ProfilesModule } from './profiles/profiles.module';
 import { RewardsModule } from './rewards/rewards.module';
 import { TasksModule } from './tasks/tasks.module';
 import { UsersModule } from './users/users.module';
+import { ListsModule } from './lists/lists.module';
 
 @Module({
   imports: [
